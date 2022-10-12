@@ -24,7 +24,7 @@ import imutils
 # Read in the .jpgs and save into an image array, ensuring grayscale- - - - - - - - - - - - - - - - - - - - - - - - - - - #
 image_array = []
 image_names = []
-for filename in glob.glob('Area\Data\*.jpg'):
+for filename in glob.glob('Data\*.jpg'):
     im = Image.open(filename).convert('L') # convert image to grayscale
     res = im.point((lambda p: 256 if p>=200 else 0)) # convert each pixel into either black or white
     res.save(filename)

@@ -155,7 +155,7 @@ for image_counter,images in enumerate(image_array):
         (warped_H,warped_W) = warped.shape[:2]
         warped = warped[5 : warped_H - 5, 5: warped_W-5]
 
-        cv2.imwrite(str("Rectangles/NewImages/")+str(image_names[image_counter])+"_"+str(counter)+".jpg", warped)
+        cv2.imwrite(str("Rectangles/Result/")+str(image_names[image_counter])+"_"+str(counter)+".jpg", warped)
         cv2.waitKey(0)
     except:
         print("ERROR")

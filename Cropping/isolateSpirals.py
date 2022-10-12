@@ -52,9 +52,9 @@ with tempfile.TemporaryDirectory() as tempDir:
 
 		rawCount = rawCount + 1
 
-imagePathA = "Cropping/DrawingA/"
-imagePathB = "Cropping/DrawingB/"
-imagePathC = "Cropping/DrawingC/"
+imagePathA = "Cropping/Result_DrawingA/"
+imagePathB = "Cropping/Result_DrawingB/"
+imagePathC = "Cropping/Result_DrawingC/"
 
 cropToleranceA = 0.9
 cropToleranceB = 0.95
@@ -126,7 +126,7 @@ for counter,image in enumerate(image_array):
 		"feature_fusion/concat_3"]
 
 	# Load the pre-trained EAST text detector
-	net = cv2.dnn.readNet("Cropping/Code/frozen_east_text_detection.pb")
+	net = cv2.dnn.readNet("Cropping/frozen_east_text_detection.pb")
 
 	# Construct a blob from the image and then perform a forward pass of the model to obtain the two output layer sets
 	blob = cv2.dnn.blobFromImage(image, 1.0, (W, H),
