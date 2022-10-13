@@ -24,8 +24,12 @@ from enum import Enum
 class Results(Enum):
     FILENAME = 0
     AREA_TRAPZ = 1
-    Q3 = 3
-    IQR = 4
+    MIN = 2
+    Q1 = 3
+    Q2 = 4
+    Q3 = 5
+    MAX = 6
+    IQR = 7
 
 # Read in the .jpgs and save into an image array, ensuring grayscale- - - - - - - - - - - - - - - - - - - - - - - - - - - #
 image_array = []
@@ -45,7 +49,6 @@ for filename in glob.glob('Area\Data\*.jpg'):
 
 figure_area = plt.figure(figsize=(8,10))
 figure_area = plt.title("Area")
-
 results_array = [[-1 for x in range(file_count)] for y in range(len(Results))] 
 
 # Loop through the image array to perform image processing- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
@@ -61,20 +64,7 @@ for image_counter, image in enumerate(image_array):
     y = np.array(y_tuple).tolist()
     z = np.array(z_tuple).tolist()
 
-    average_x = np.mean(x)
-    max_x = np.max(x)
-    min_x = np.min(x)
-    x_adjustment = 10/100*max_x
-   
-    # Remove top and bottom of pixels of image to get rid of any remaining border
-    tracker = 0
-    for i in range(0, len(x)): 
-        if x[tracker] > max_x - x_adjustment or x[tracker] < min_x + x_adjustment:
-            y.pop(tracker)
-            x.pop(tracker)
-            tracker = tracker - 1
-        tracker = tracker + 1
-
+    average_x = np.mean(x)  
     new_array_x = []
     new_array_y = []
     average_array_x = []
@@ -101,6 +91,20 @@ for image_counter, image in enumerate(image_array):
         else:
             new_array_x.append(x[i] - average_x)
 
+    # NOTE: The below code does NOT work as intended - it removes the top X% of all graphs, even those without erroneous border lines
+    # Need to try think of better solution! 
+    #
+    # # Remove erroneous X% of top pixels of image to get rid of any remaining border
+    # max_new_x = np.max(new_array_x)
+    # x_adjustment = 1/100*max_new_x
+    # tracker = 0
+    # for i in range(0, len(new_array_x)): 
+    #     if new_array_x[tracker] > max_new_x - x_adjustment:
+    #         new_array_y.pop(tracker)
+    #         new_array_x.pop(tracker)
+    #         tracker = tracker - 1
+    #     tracker = tracker + 1
+
     # Plot the shifted points as a line graph 
     figure_area = plt.subplot(math.ceil(file_count/2), 2, image_counter+1)
     figure_area = plt.title(str(image_names[image_counter]))  
@@ -118,16 +122,47 @@ for image_counter, image in enumerate(image_array):
     # Quantile values of the data
     min, q1, q2, q3, max = np.quantile(new_array_x, [0, 0.25, 0.5, 0.75, 1])
     iqr = q3-q1
-    figure_area = plt.text(400, 10, "Q75: " + str(round(q3, 2)), bbox=dict(facecolor='red', alpha=0.5))
+    # figure_area = plt.text(400, 10, "Q75: " + str(round(q3, 2)), bbox=dict(facecolor='red', alpha=0.5))
+    # figure_area = plt.text(400, 5, "IQR: " + str(round(iqr, 2)), bbox=dict(facecolor='red', alpha=0.5))
+
+    results_array[Results.MIN.value][image_counter] = min
+    results_array[Results.Q1.value][image_counter] = q1
+    results_array[Results.Q2.value][image_counter] = q2
     results_array[Results.Q3.value][image_counter] = q3
-    figure_area = plt.text(400, 5, "IQR: " + str(round(iqr, 2)), bbox=dict(facecolor='red', alpha=0.5))
+    results_array[Results.MAX.value][image_counter] = max
     results_array[Results.IQR.value][image_counter] = iqr
 
+    average_areas = []
+    percent_of_length = int(10/100*len(new_array_y))
+    print(percent_of_length)
+    temp_counter = 1
     
+    for i in range(0, len(new_array_y), percent_of_length):
+        figure_temp = plt.figure(temp_counter)
+
+        temp_array_x = []
+        temp_array_y = []
+        if i+percent_of_length < len(new_array_y):
+            for j in range(i, i+percent_of_length):
+                temp_array_x.append(new_array_x[j])
+                temp_array_y.append(new_array_y[j])
+
+        temp_area_x = round(trapz(temp_array_x, temp_array_y), 2)
+        average_areas.append(temp_area_x)
+
+        figure_temp = plt.plot(temp_array_y, temp_array_x)
+        figure_temp = plt.text(np.max(temp_array_y)-10, np.max(temp_array_x), "Area X: " + str(temp_area_x), bbox=dict(facecolor='red', alpha=0.5))
+        figure_temp = plt.show()
+        temp_counter = temp_counter + 1
+    print(average_areas)
+
+
 
 figure_area = plt.tight_layout()
-plt.show()
+figure_area = plt.show()
 
+print()
+print("- - - - - RESULTS ARRAY - - - - -")
 print(results_array)
 
 # END OF CODE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
