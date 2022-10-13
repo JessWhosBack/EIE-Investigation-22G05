@@ -30,6 +30,7 @@ class Results(Enum):
     Q3 = 5
     MAX = 6
     IQR = 7
+    STDDEV = 8
 
 # Read in the .jpgs and save into an image array, ensuring grayscale- - - - - - - - - - - - - - - - - - - - - - - - - - - #
 image_array = []
@@ -72,7 +73,7 @@ for image_counter, image in enumerate(image_array):
     # Sort the array of pixels into an ordered array according to the horizontal x-axis
     for i in range(0, len(y)-1):
         for j in range(0, len(y)-i-1):
-            if y[j] < y[j+1]:
+            if y[j] > y[j+1]:
                 temp_x = x[j]
                 x[j] = x[j+1]
                 x[j+1] = temp_x
@@ -122,6 +123,7 @@ for image_counter, image in enumerate(image_array):
     # Quantile values of the data
     min, q1, q2, q3, max = np.quantile(new_array_x, [0, 0.25, 0.5, 0.75, 1])
     iqr = q3-q1
+    std = np.std(new_array_x)
     # figure_area = plt.text(400, 10, "Q75: " + str(round(q3, 2)), bbox=dict(facecolor='red', alpha=0.5))
     # figure_area = plt.text(400, 5, "IQR: " + str(round(iqr, 2)), bbox=dict(facecolor='red', alpha=0.5))
 
@@ -131,31 +133,53 @@ for image_counter, image in enumerate(image_array):
     results_array[Results.Q3.value][image_counter] = q3
     results_array[Results.MAX.value][image_counter] = max
     results_array[Results.IQR.value][image_counter] = iqr
+    results_array[Results.STDDEV.value][image_counter] = std
 
     average_areas = []
-    percent_of_length = int(10/100*len(new_array_y))
-    print(percent_of_length)
     temp_counter = 1
+    max_new_array_y = np.max(new_array_y)
+    percent_of_xaxis = int(5/100*max_new_array_y)
+    array_iterator = 0
     
-    for i in range(0, len(new_array_y), percent_of_length):
-        figure_temp = plt.figure(temp_counter)
+    for i in range(percent_of_xaxis, max_new_array_y, percent_of_xaxis):
+        # figure_temp = plt.figure(temp_counter)
 
         temp_array_x = []
         temp_array_y = []
-        if i+percent_of_length < len(new_array_y):
-            for j in range(i, i+percent_of_length):
-                temp_array_x.append(new_array_x[j])
-                temp_array_y.append(new_array_y[j])
+        before_array_iterator = array_iterator
+
+        while new_array_y[array_iterator] < i:
+            temp_array_x.append(new_array_x[array_iterator])
+            temp_array_y.append(new_array_y[array_iterator])
+            array_iterator = array_iterator + 1
+
+        if array_iterator == before_array_iterator:
+            temp_array_x.append(new_array_x[array_iterator-1])
+            temp_array_y.append(new_array_y[array_iterator-1])
+            temp_array_x.append(new_array_x[array_iterator])
+            temp_array_y.append(new_array_y[array_iterator])
+                     
+        # print(str(i) + " " + str(array_iterator) + " " + str(new_array_y[array_iterator]))
 
         temp_area_x = round(trapz(temp_array_x, temp_array_y), 2)
         average_areas.append(temp_area_x)
+        
+        # figure_temp = plt.plot(temp_array_y, temp_array_x)
+        # try:
+        #     figure_temp = plt.text(np.max(temp_array_y)-10, np.max(temp_array_x), "Area X: " + str(temp_area_x), bbox=dict(facecolor='red', alpha=0.5))
+        # except: 
+        #     print("ERROR")
+        # figure_temp = plt.show()
 
-        figure_temp = plt.plot(temp_array_y, temp_array_x)
-        figure_temp = plt.text(np.max(temp_array_y)-10, np.max(temp_array_x), "Area X: " + str(temp_area_x), bbox=dict(facecolor='red', alpha=0.5))
-        figure_temp = plt.show()
         temp_counter = temp_counter + 1
-    print(average_areas)
 
+    # Quantile values of the data
+    split_min, split_q1, split_q2, split_q3, split_max = np.quantile(average_areas, [0, 0.25, 0.5, 0.75, 1])
+    split_iqr = split_q3-split_q1
+    split_std = np.std(average_areas)
+    print(str(image_counter) + ": " + str(average_areas))
+    print(str(split_std))
+    print(str(split_min) + " " + str(split_q1) + " " + str(split_q2) + " " + str(split_q3) + " " + str(split_max) + " " + str(split_iqr))
 
 
 figure_area = plt.tight_layout()
