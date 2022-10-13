@@ -20,9 +20,12 @@ from PIL import Image
 from numpy import trapz
 import math
 from enum import Enum
+import pandas as pd
+from IPython.display import display
 
 class Results(Enum):
     FILENAME = 0
+
     AREA_TRAPZ = 1
     MIN = 2
     Q1 = 3
@@ -32,6 +35,15 @@ class Results(Enum):
     IQR = 7
     STDDEV = 8
 
+    AVG_AREA_TRAPZ = 9
+    AVG_MIN = 10
+    AVG_Q1 = 11
+    AVG_Q2 = 12
+    AVG_Q3 = 13
+    AVG_MAX = 14
+    AVG_IQR = 15
+    AVG_STDDEV = 16
+    
 # Read in the .jpgs and save into an image array, ensuring grayscale- - - - - - - - - - - - - - - - - - - - - - - - - - - #
 image_array = []
 image_names = []
@@ -48,13 +60,13 @@ for filename in glob.glob('Area\Data\*.jpg'):
     image_names.append(arrayName)
     file_count = file_count + 1
 
-figure_area = plt.figure(figsize=(8,10))
+figure_area = plt.figure(0, figsize=(8,10))
 figure_area = plt.title("Area")
-results_array = [[-1 for x in range(file_count)] for y in range(len(Results))] 
+results_array = [[-1 for x in range(len(Results))] for y in range(file_count)] 
 
 # Loop through the image array to perform image processing- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
 for image_counter, image in enumerate(image_array):
-    results_array[Results.FILENAME.value][image_counter] = image_names[image_counter]
+    results_array[image_counter][Results.FILENAME.value] = image_names[image_counter]
 
     # IMAGE PROCESSING TO GENERATE GRAPH OF HAND DRAWN LINE THAT HAS BEEN SHIFTED DOWN TO THE X-AXIS- - - - - - - - - - - #
     # NOTE: The horizontal axis is denoted by y, and the vertical axis is denoted by x (no, this was not on purpose)
@@ -117,7 +129,7 @@ for image_counter, image in enumerate(image_array):
     # EXTRACTING OF NUMERICAL DATA FROM THE ABOVE GRAPH - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
     # Area under the curve, using numpy's trapz formula
     total_area_trapz_x = round(trapz(new_array_x), 2)
-    results_array[Results.AREA_TRAPZ.value][image_counter] = total_area_trapz_x
+    results_array[image_counter][Results.AREA_TRAPZ.value] = round(total_area_trapz_x, 2)
     figure_area = plt.text(400, 15, "Area: " + str(total_area_trapz_x), bbox=dict(facecolor='red', alpha=0.5))
 
     # Quantile values of the data
@@ -127,13 +139,13 @@ for image_counter, image in enumerate(image_array):
     # figure_area = plt.text(400, 10, "Q75: " + str(round(q3, 2)), bbox=dict(facecolor='red', alpha=0.5))
     # figure_area = plt.text(400, 5, "IQR: " + str(round(iqr, 2)), bbox=dict(facecolor='red', alpha=0.5))
 
-    results_array[Results.MIN.value][image_counter] = min
-    results_array[Results.Q1.value][image_counter] = q1
-    results_array[Results.Q2.value][image_counter] = q2
-    results_array[Results.Q3.value][image_counter] = q3
-    results_array[Results.MAX.value][image_counter] = max
-    results_array[Results.IQR.value][image_counter] = iqr
-    results_array[Results.STDDEV.value][image_counter] = std
+    results_array[image_counter][Results.MIN.value] = round(min, 2)
+    results_array[image_counter][Results.Q1.value] = round(q1, 2)
+    results_array[image_counter][Results.Q2.value] = round(q2, 2)
+    results_array[image_counter][Results.Q3.value] = round(q3, 2)
+    results_array[image_counter][Results.MAX.value] = round(max, 2)
+    results_array[image_counter][Results.IQR.value] = round(iqr, 2)
+    results_array[image_counter][Results.STDDEV.value] = round(std, 2)
 
     average_areas = []
     temp_counter = 1
@@ -174,12 +186,24 @@ for image_counter, image in enumerate(image_array):
         temp_counter = temp_counter + 1
 
     # Quantile values of the data
-    split_min, split_q1, split_q2, split_q3, split_max = np.quantile(average_areas, [0, 0.25, 0.5, 0.75, 1])
-    split_iqr = split_q3-split_q1
-    split_std = np.std(average_areas)
-    print(str(image_counter) + ": " + str(average_areas))
-    print(str(split_std))
-    print(str(split_min) + " " + str(split_q1) + " " + str(split_q2) + " " + str(split_q3) + " " + str(split_max) + " " + str(split_iqr))
+    avg_avg_area = np.mean(average_areas)
+    avg_min, avg_q1, avg_q2, avg_q3, avg_max = np.quantile(average_areas, [0, 0.25, 0.5, 0.75, 1])
+    avg_iqr = avg_q3-avg_q1
+    avg_std = np.std(average_areas)
+
+    results_array[image_counter][Results.AVG_AREA_TRAPZ.value] = round(avg_avg_area,2)
+    results_array[image_counter][Results.AVG_MIN.value] = round(avg_min,2)
+    results_array[image_counter][Results.AVG_Q1.value] = round(avg_q1,2)
+    results_array[image_counter][Results.AVG_Q2.value] = round(avg_q2,2)
+    results_array[image_counter][Results.AVG_Q3.value] = round(avg_q3,2)
+    results_array[image_counter][Results.AVG_MAX.value] = round(avg_max,2)
+    results_array[image_counter][Results.AVG_IQR.value] = round(avg_iqr,2)
+    results_array[image_counter][Results.AVG_STDDEV.value] = round(avg_std,2)
+
+    # print(str(image_counter) + ": " + str(average_areas))
+    # print(str(avg_std))
+    # print(str(avg_min) + " " + str(avg_q1) + " " + str(avg_q2) + " " + str(avg_q3) + " " + str(avg_max) + " " + str(avg_iqr))
+
 
 
 figure_area = plt.tight_layout()
@@ -187,6 +211,32 @@ figure_area = plt.show()
 
 print()
 print("- - - - - RESULTS ARRAY - - - - -")
-print(results_array)
+print(np.matrix(results_array))
+print("- - - - - RESULTS ARRAY - - - - -")
+
+
+table_columns = []
+for r in Results:
+    table_columns.append(str(r.name))
+
+df = pd.DataFrame(np.array(results_array), columns=table_columns)
+
+display(df)
+# table_figure = plt.figure(1)
+# table_figure, ax = plt.subplots()
+
+# # hide axes
+# table_figure.patch.set_visible(False)
+# ax.axis('off')
+# ax.axis('tight')
+
+# ax.table(cellText=df.values, colLabels=df.columns, loc='center')
+
+# table_figure.tight_layout()
+
+# table_figure = plt.show()
+
+
+# print(results_array)
 
 # END OF CODE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
