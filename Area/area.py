@@ -22,6 +22,7 @@ import math
 from enum import Enum
 import pandas as pd
 from IPython.display import display
+from sympy import false
 
 class Results(Enum):
     FILENAME = 0
@@ -36,13 +37,13 @@ class Results(Enum):
     STDDEV = 8
 
     AVG_AREA_TRAPZ = 9
-    AVG_MIN = 10
-    AVG_Q1 = 11
-    AVG_Q2 = 12
-    AVG_Q3 = 13
-    AVG_MAX = 14
-    AVG_IQR = 15
-    AVG_STDDEV = 16
+    AVG_AREA_MIN = 10
+    AVG_AREA_Q1 = 11
+    AVG_AREA_Q2 = 12
+    AVG_AREA_Q3 = 13
+    AVG_AREA_MAX = 14
+    AVG_AREA_IQR = 15
+    AVG_AREA_STDDEV = 16
     
 # Read in the .jpgs and save into an image array, ensuring grayscale- - - - - - - - - - - - - - - - - - - - - - - - - - - #
 image_array = []
@@ -154,8 +155,6 @@ for image_counter, image in enumerate(image_array):
     array_iterator = 0
     
     for i in range(percent_of_xaxis, max_new_array_y, percent_of_xaxis):
-        # figure_temp = plt.figure(temp_counter)
-
         temp_array_x = []
         temp_array_y = []
         before_array_iterator = array_iterator
@@ -171,18 +170,8 @@ for image_counter, image in enumerate(image_array):
             temp_array_x.append(new_array_x[array_iterator])
             temp_array_y.append(new_array_y[array_iterator])
                      
-        # print(str(i) + " " + str(array_iterator) + " " + str(new_array_y[array_iterator]))
-
         temp_area_x = round(trapz(temp_array_x, temp_array_y), 2)
-        average_areas.append(temp_area_x)
-        
-        # figure_temp = plt.plot(temp_array_y, temp_array_x)
-        # try:
-        #     figure_temp = plt.text(np.max(temp_array_y)-10, np.max(temp_array_x), "Area X: " + str(temp_area_x), bbox=dict(facecolor='red', alpha=0.5))
-        # except: 
-        #     print("ERROR")
-        # figure_temp = plt.show()
-
+        average_areas.append(temp_area_x)   
         temp_counter = temp_counter + 1
 
     # Quantile values of the data
@@ -192,51 +181,23 @@ for image_counter, image in enumerate(image_array):
     avg_std = np.std(average_areas)
 
     results_array[image_counter][Results.AVG_AREA_TRAPZ.value] = round(avg_avg_area,2)
-    results_array[image_counter][Results.AVG_MIN.value] = round(avg_min,2)
-    results_array[image_counter][Results.AVG_Q1.value] = round(avg_q1,2)
-    results_array[image_counter][Results.AVG_Q2.value] = round(avg_q2,2)
-    results_array[image_counter][Results.AVG_Q3.value] = round(avg_q3,2)
-    results_array[image_counter][Results.AVG_MAX.value] = round(avg_max,2)
-    results_array[image_counter][Results.AVG_IQR.value] = round(avg_iqr,2)
-    results_array[image_counter][Results.AVG_STDDEV.value] = round(avg_std,2)
-
-    # print(str(image_counter) + ": " + str(average_areas))
-    # print(str(avg_std))
-    # print(str(avg_min) + " " + str(avg_q1) + " " + str(avg_q2) + " " + str(avg_q3) + " " + str(avg_max) + " " + str(avg_iqr))
-
-
+    results_array[image_counter][Results.AVG_AREA_MIN.value] = round(avg_min,2)
+    results_array[image_counter][Results.AVG_AREA_Q1.value] = round(avg_q1,2)
+    results_array[image_counter][Results.AVG_AREA_Q2.value] = round(avg_q2,2)
+    results_array[image_counter][Results.AVG_AREA_Q3.value] = round(avg_q3,2)
+    results_array[image_counter][Results.AVG_AREA_MAX.value] = round(avg_max,2)
+    results_array[image_counter][Results.AVG_AREA_IQR.value] = round(avg_iqr,2)
+    results_array[image_counter][Results.AVG_AREA_STDDEV.value] = round(avg_std,2)
 
 figure_area = plt.tight_layout()
 figure_area = plt.show()
 
-print()
-print("- - - - - RESULTS ARRAY - - - - -")
-print(np.matrix(results_array))
-print("- - - - - RESULTS ARRAY - - - - -")
-
-
 table_columns = []
 for r in Results:
     table_columns.append(str(r.name))
-
 df = pd.DataFrame(np.array(results_array), columns=table_columns)
-
+print("- - - - - RESULTS ARRAY - - - - -")
 display(df)
-# table_figure = plt.figure(1)
-# table_figure, ax = plt.subplots()
 
-# # hide axes
-# table_figure.patch.set_visible(False)
-# ax.axis('off')
-# ax.axis('tight')
-
-# ax.table(cellText=df.values, colLabels=df.columns, loc='center')
-
-# table_figure.tight_layout()
-
-# table_figure = plt.show()
-
-
-# print(results_array)
-
+df.to_csv('Area/Result/Results.csv', index=False)
 # END OF CODE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
