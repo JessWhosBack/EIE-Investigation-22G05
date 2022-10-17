@@ -26,6 +26,8 @@ import tempfile
 # Read in the PDFs and convert to .jpg- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
 image_array = []
 image_names = []
+image_path = []
+
 counter = 0
 rawCount = 0
 sizeErrorCountA = 0
@@ -34,27 +36,61 @@ sizeErrorCountC = 0
 
 with tempfile.TemporaryDirectory() as tempDir:
 	print('created temporary directory', tempDir)
-	for filename in glob.glob('Cropping/Data/*.pdf'):
-		arrayName= os.path.basename(filename)
-		arrayName=arrayName.replace(".pdf","")
-		newName = filename.replace(".pdf","")
-		newName = str(tempDir) + "/"+str(arrayName)
+	for foldername in glob.glob('Data/Original/ET/*'):
+		newFolderName = foldername.replace("Original", "Cropped")
+		os.makedirs(newFolderName, exist_ok = True)
+		os.makedirs(newFolderName+'/DrawingA', exist_ok = True)
+		os.makedirs(newFolderName+'/DrawingB', exist_ok = True)
+		os.makedirs(newFolderName+'/DrawingC', exist_ok = True)
+		for filename in glob.glob(foldername + '/*.pdf'):
+			arrayName = os.path.basename(filename)
+			arrayName = arrayName.replace(".pdf","")
 
-		def convertPDFtoJGP(originalImage,finalImage,dpi=200):
-			pages = convert_from_path(originalImage, dpi)
-			for page in pages:
-				page.save(finalImage, 'JPEG')
+			newName = filename.replace(".pdf","")
+			newName = str(tempDir) + "/"+str(arrayName)
 
-		convertPDFtoJGP(filename,newName+'.jpg',150)
-		image = cv2.imread(newName+'.jpg')
-		image_array.append(image)
-		image_names.append(arrayName)
+			newPath = foldername.replace("Original", "Cropped")
+			image_path.append(newPath)
 
-		rawCount = rawCount + 1
+			def convertPDFtoJGP(originalImage,finalImage,dpi=200):
+				pages = convert_from_path(originalImage, dpi)
+				for page in pages:
+					page.save(finalImage, 'JPEG')
 
-imagePathA = "Cropping/Result_DrawingA/"
-imagePathB = "Cropping/Result_DrawingB/"
-imagePathC = "Cropping/Result_DrawingC/"
+			convertPDFtoJGP(filename,newName+'.jpg',150)
+			image = cv2.imread(newName+'.jpg')
+			image_array.append(image)
+			image_names.append(arrayName)
+
+			rawCount = rawCount + 1
+
+	for foldername in glob.glob('Data/Original/PD/*'):
+		newFolderName = foldername.replace("Original", "Cropped")
+		os.makedirs(newFolderName, exist_ok = True)
+		os.makedirs(newFolderName+'/DrawingA', exist_ok = True)
+		os.makedirs(newFolderName+'/DrawingB', exist_ok = True)
+		os.makedirs(newFolderName+'/DrawingC', exist_ok = True)
+		for filename in glob.glob(foldername + '/*.pdf'):
+			arrayName = os.path.basename(filename)
+			arrayName = arrayName.replace(".pdf","")
+
+			newName = filename.replace(".pdf","")
+			newName = str(tempDir) + "/"+str(arrayName)
+
+			newPath = foldername.replace("Original", "Cropped")
+			image_path.append(newPath)
+
+			def convertPDFtoJGP(originalImage,finalImage,dpi=200):
+				pages = convert_from_path(originalImage, dpi)
+				for page in pages:
+					page.save(finalImage, 'JPEG')
+
+			convertPDFtoJGP(filename,newName+'.jpg',150)
+			image = cv2.imread(newName+'.jpg')
+			image_array.append(image)
+			image_names.append(arrayName)
+
+			rawCount = rawCount + 1
 
 cropToleranceA = 0.9
 cropToleranceB = 0.95
@@ -302,7 +338,9 @@ for counter,image in enumerate(image_array):
 		# if hFinalA != wFinalA:
 		# 	sizeErrorCountA = sizeErrorCountA + 1
 
-		cv2.imwrite(str(imagePathA)+str(image_names[counter])+"_A_"+".jpg",finalA)
+		new_image_path = str(image_path[counter])+'/DrawingA/'+str(image_names[counter])+"_A"+".jpg"
+		print(new_image_path)
+		cv2.imwrite(new_image_path, finalA)
 	except Exception as e:
 		print("Unable to save to file A as image size is empty: ",str(e))
 
@@ -316,7 +354,9 @@ for counter,image in enumerate(image_array):
 		# if hFinalB != wFinalB*cropToleranceB:
 		# 	sizeErrorCountB = sizeErrorCountB + 1
 
-		cv2.imwrite(str(imagePathB)+str(image_names[counter])+"_B_"+".jpg",finalB)
+		new_image_path = str(image_path[counter])+'/DrawingB/'+str(image_names[counter])+"_B"+".jpg"
+		print(new_image_path)
+		cv2.imwrite(new_image_path, finalB)
 	except Exception as e:
 		print("Unable to save to file B as image size is empty: ",str(e))
 
@@ -330,7 +370,9 @@ for counter,image in enumerate(image_array):
 		# if hFinalC != wFinalC: 
 		# 	sizeErrorcountC = sizeErrorCountC + 1 
 		
-		cv2.imwrite(str(imagePathC)+str(image_names[counter])+"_C_"+".jpg", finalC)
+		new_image_path = str(image_path[counter])+'/DrawingC/'+str(image_names[counter])+"_C"+".jpg"
+		print(new_image_path)
+		cv2.imwrite(new_image_path, finalC)
 	except Exception as e:
 		print("Unable to save to file C as image size is empty: ",str(e))
 	print("Finished image ", image_names[counter])
