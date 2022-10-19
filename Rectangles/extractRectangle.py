@@ -24,17 +24,26 @@ import numpy as np
 # Read in the .jpgs and save into an image array- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
 image_array = []
 image_names = []
-for filename in glob.glob('Rectangles\Data\*.jpg'):
-    im = Image.open(filename).convert('L') # convert image to grayscale
-    res = im.point((lambda p: 256 if p>=200 else 0)) # convert each pixel into either black or white
-    res.save(filename)
+image_path = []
 
-    arrayName = os.path.basename(filename)
-    arrayName = arrayName.replace(".jpg","")
-    image = cv2.imread(filename)
-    image = cv2.bitwise_not(image) # invert the colors of the image
-    image_array.append(image)
-    image_names.append(arrayName)
+for outer_foldername in glob.glob('Data\Cropped\*'):
+    for foldername in glob.glob(outer_foldername + '\*'):
+        for filename in glob.glob(foldername + "\DrawingC\*.jpg"):
+            im = Image.open(filename).convert('L') # convert image to grayscale
+            res = im.point((lambda p: 256 if p>=200 else 0)) # convert each pixel into either black or white
+            res.save(filename)
+
+            arrayName = os.path.basename(filename)
+            arrayName = arrayName.replace(".jpg","")
+
+            newPath = foldername + '\DrawingC\Rectangles'
+            os.makedirs(newPath, exist_ok = True)
+            image_path.append(newPath)
+
+            image = cv2.imread(filename)
+            image = cv2.bitwise_not(image) # invert the colors of the image
+            image_array.append(image)
+            image_names.append(arrayName)
 
 # Loop through the image array and extract the top-most hand drawn rectangle- - - - - - - - - - - - - - - - - - - - - - - #
 for image_counter,images in enumerate(image_array):
@@ -155,7 +164,7 @@ for image_counter,images in enumerate(image_array):
         (warped_H,warped_W) = warped.shape[:2]
         warped = warped[5 : warped_H - 5, 5: warped_W-5]
 
-        cv2.imwrite(str("Rectangles/Result/")+str(image_names[image_counter])+"_"+str(counter)+".jpg", warped)
+        cv2.imwrite(str(image_path[image_counter]) + "/"+str(image_names[image_counter])+"_RECT.jpg", warped)
         cv2.waitKey(0)
     except:
         print("ERROR")

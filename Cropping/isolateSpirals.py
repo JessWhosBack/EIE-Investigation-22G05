@@ -36,61 +36,34 @@ sizeErrorCountC = 0
 
 with tempfile.TemporaryDirectory() as tempDir:
 	print('created temporary directory', tempDir)
-	for foldername in glob.glob('Data/Original/ET/*'):
-		newFolderName = foldername.replace("Original", "Cropped")
-		os.makedirs(newFolderName, exist_ok = True)
-		os.makedirs(newFolderName+'/DrawingA', exist_ok = True)
-		os.makedirs(newFolderName+'/DrawingB', exist_ok = True)
-		os.makedirs(newFolderName+'/DrawingC', exist_ok = True)
-		for filename in glob.glob(foldername + '/*.pdf'):
-			arrayName = os.path.basename(filename)
-			arrayName = arrayName.replace(".pdf","")
+	for outer_foldername in glob.glob('Data/Original/*'):
+		for foldername in glob.glob(outer_foldername + '/*'):
+			newFolderName = foldername.replace("Original", "Cropped")
+			os.makedirs(newFolderName, exist_ok = True)
+			os.makedirs(newFolderName+'/DrawingA', exist_ok = True)
+			os.makedirs(newFolderName+'/DrawingB', exist_ok = True)
+			os.makedirs(newFolderName+'/DrawingC', exist_ok = True)
+			for filename in glob.glob(foldername + '/*.pdf'):
+				arrayName = os.path.basename(filename)
+				arrayName = arrayName.replace(".pdf","")
 
-			newName = filename.replace(".pdf","")
-			newName = str(tempDir) + "/"+str(arrayName)
+				newName = filename.replace(".pdf","")
+				newName = str(tempDir) + "/"+str(arrayName)
 
-			newPath = foldername.replace("Original", "Cropped")
-			image_path.append(newPath)
+				newPath = foldername.replace("Original", "Cropped")
+				image_path.append(newPath)
 
-			def convertPDFtoJGP(originalImage,finalImage,dpi=200):
-				pages = convert_from_path(originalImage, dpi)
-				for page in pages:
-					page.save(finalImage, 'JPEG')
+				def convertPDFtoJGP(originalImage,finalImage,dpi=200):
+					pages = convert_from_path(originalImage, dpi)
+					for page in pages:
+						page.save(finalImage, 'JPEG')
 
-			convertPDFtoJGP(filename,newName+'.jpg',150)
-			image = cv2.imread(newName+'.jpg')
-			image_array.append(image)
-			image_names.append(arrayName)
+				convertPDFtoJGP(filename,newName+'.jpg',150)
+				image = cv2.imread(newName+'.jpg')
+				image_array.append(image)
+				image_names.append(arrayName)
 
-			rawCount = rawCount + 1
-
-	for foldername in glob.glob('Data/Original/PD/*'):
-		newFolderName = foldername.replace("Original", "Cropped")
-		os.makedirs(newFolderName, exist_ok = True)
-		os.makedirs(newFolderName+'/DrawingA', exist_ok = True)
-		os.makedirs(newFolderName+'/DrawingB', exist_ok = True)
-		os.makedirs(newFolderName+'/DrawingC', exist_ok = True)
-		for filename in glob.glob(foldername + '/*.pdf'):
-			arrayName = os.path.basename(filename)
-			arrayName = arrayName.replace(".pdf","")
-
-			newName = filename.replace(".pdf","")
-			newName = str(tempDir) + "/"+str(arrayName)
-
-			newPath = foldername.replace("Original", "Cropped")
-			image_path.append(newPath)
-
-			def convertPDFtoJGP(originalImage,finalImage,dpi=200):
-				pages = convert_from_path(originalImage, dpi)
-				for page in pages:
-					page.save(finalImage, 'JPEG')
-
-			convertPDFtoJGP(filename,newName+'.jpg',150)
-			image = cv2.imread(newName+'.jpg')
-			image_array.append(image)
-			image_names.append(arrayName)
-
-			rawCount = rawCount + 1
+				rawCount = rawCount + 1
 
 cropToleranceA = 0.9
 cropToleranceB = 0.95
