@@ -23,7 +23,8 @@ from enum import Enum
 import pandas as pd
 from IPython.display import display
 from sympy import false
-
+from scipy import signal
+from scipy.fft import rfft, rfftfreq, fft, fftfreq, irfft, ifft
 class Results(Enum):
     FILENAME = 0
     PATIENT_NUMBER = 1
@@ -122,10 +123,12 @@ def is_dominant_hand(image_name, patient_number):
         else:
             return True
 
+counter = 0
 for outer_foldername in glob.glob('Data\Cropped\*'):
     for foldername in glob.glob(outer_foldername + '\*'):
         patient_number = os.path.basename(foldername)
         patient_number = patient_number.replace("#", "")
+        counter = counter + 1
         for filename in glob.glob(foldername + "\DrawingC\Rectangles\*.jpg"):
             arrayName = os.path.basename(filename)
             arrayName = arrayName.replace(".jpg","")
@@ -145,8 +148,16 @@ for outer_foldername in glob.glob('Data\Cropped\*'):
                 image_dominant_hand.append(is_dominant)
                 file_count = file_count + 1
 
+        if counter >= 1:
+            break
+    if counter >= 1:
+        break
+
 figure_area = plt.figure(0, figsize=(8,10))
 figure_area = plt.title("Area")
+
+figure_fft = plt.figure(12, figsize = (8,10))
+
 results_array = [[-1 for x in range(len(Results))] for y in range(file_count)] 
 
 # Loop through the image array to perform image processing- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
@@ -207,12 +218,34 @@ for image_counter, image in enumerate(image_array):
         #     tracker = tracker + 1
 
         # Plot the shifted points as a line graph 
-        figure_area = plt.subplot(math.ceil(file_count/2), 2, image_counter+1)
-        figure_area = plt.title(str(image_names[image_counter]))  
-        figure_area = plt.plot(new_array_y, new_array_x)
-        figure_area = plt.fill_between(new_array_y, new_array_x, color="grey")
-        figure_area = plt.xlim(0, 600)
-        figure_area = plt.ylim(0, 20)
+        # figure_area = plt.subplot(math.ceil(file_count/2), 2, image_counter+1)
+        # figure_area = plt.title(str(image_names[image_counter]))  
+        # figure_area = plt.plot(new_array_y, new_array_x)
+        # figure_area = plt.fill_between(new_array_y, new_array_x, color="grey")
+        # figure_area = plt.xlim(0, 600)
+        # figure_area = plt.ylim(0, 20)
+
+
+        sos = signal.iirfilter(4, Wn=[0.1, 2.5], fs=30, btype="bandpass", ftype="butter", output="sos")
+        yfilt = signal.sosfilt(sos, new_array_x)
+
+        # figure_area = plt.plot(yfilt)
+
+        figure_fft = plt.subplot(math.ceil(file_count/2), 2, image_counter+1)
+        # figure_fft = plt.xlim(0, 0.2)
+        data_step = 0.1
+        n = len(new_array_y)
+        yf = rfft(new_array_x)
+        xf = rfftfreq(n, data_step)
+        # figure_fft = plt.plot(xf, np.abs(yf))
+
+        yf_abs = np.abs(yf)
+        indices = yf_abs>500
+        yf_clean = indices*yf
+        # figure_fft = plt.plot(xf, np.abs(yf_clean))
+
+        new_f_clean = irfft(yf_clean)
+        figure_fft = plt.plot(new_array_y, new_f_clean)
 
         # EXTRACTING OF NUMERICAL DATA FROM THE ABOVE GRAPH - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
         # Area under the curve, using numpy's trapz formula
@@ -221,11 +254,26 @@ for image_counter, image in enumerate(image_array):
         figure_area = plt.text(400, 15, "Area: " + str(total_area_trapz_x), bbox=dict(facecolor='red', alpha=0.5))
 
         # Quantile values of the data
-        min, q1, q2, q3, max = np.quantile(new_array_x, [0, 0.25, 0.5, 0.75, 1])
+        min, q1, q2, q3, q90, max = np.quantile(new_array_x, [0, 0.25, 0.5, 0.75, 0.9, 1])
         iqr = q3-q1
         std = np.std(new_array_x)
         # figure_area = plt.text(400, 10, "Q75: " + str(round(q3, 2)), bbox=dict(facecolor='red', alpha=0.5))
         # figure_area = plt.text(400, 5, "IQR: " + str(round(iqr, 2)), bbox=dict(facecolor='red', alpha=0.5))
+
+        ## NEW CODE HERE: 
+        num_peaks = signal.find_peaks(np.array(new_array_x), threshold=q3)
+        print(len(num_peaks[0]))
+        print(num_peaks)
+
+        # figure_area = plt.text(400, 20, "Num Peaks: " + str(len(num_peaks[0])), bbox=dict(facecolor='blue', alpha=0.5))
+
+
+        ## END OF NEW CODE 
+
+
+
+
+
 
         # results_array[image_counter][Results.MIN.value] = round(min, 2)
         # results_array[image_counter][Results.Q1.value] = round(q1, 2)
