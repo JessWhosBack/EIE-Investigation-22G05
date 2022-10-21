@@ -106,7 +106,6 @@ def get_time_period(image_name):
 
     return -1
 
-
 def is_dominant_hand(image_name, patient_number):
     image_name = str.lower(image_name)
 
@@ -179,7 +178,6 @@ for image_counter, image in enumerate(image_array):
     average_x = np.mean(x)  
     new_array_x = []
     new_array_y = []
-    average_array_x = []
     
     # Sort the array of pixels into an ordered array according to the horizontal x-axis
     for i in range(0, len(y)-1):
@@ -196,12 +194,13 @@ for image_counter, image in enumerate(image_array):
     # Take the absolute value and shift the points down to be centered around the vertical axis
     for i in range(0, len(x)):
         new_array_y.append(y[i])
-        average_array_x.append(0)
-        if x[i] < average_x: 
-            c = 3
-            new_array_x.append(average_x - x[i])
-        else:
-            new_array_x.append(x[i] - average_x)
+        new_array_x.append(x[i]-average_x)
+        
+        # if x[i] < average_x: 
+        #     c = 3
+        #     new_array_x.append(average_x - x[i])
+        # else:
+        #     new_array_x.append(x[i] - average_x)
 
     # NOTE: The below code does NOT work as intended - it removes the top X% of all graphs, even those without erroneous border lines
     # Need to try think of better solution! 
@@ -217,15 +216,14 @@ for image_counter, image in enumerate(image_array):
     #         tracker = tracker - 1
     #     tracker = tracker + 1
 
-    figure_fft = plt.subplot(math.ceil(file_count/2), 2, image_counter+1)
 
     # Plot the shifted points as a line graph 
     # figure_area = plt.subplot(math.ceil(file_count/2), 2, image_counter+1)
     # figure_area = plt.title(str(image_names[image_counter]))  
-    figure_fft = plt.plot(new_array_y, new_array_x)
     # figure_area = plt.fill_between(new_array_y, new_array_x, color="grey")
-    # figure_area = plt.xlim(0, 600)
-    # figure_area = plt.ylim(0, 20)
+    figure_fft = plt.subplot(math.ceil(file_count/2), 2, image_counter+1)
+    figure_fft = plt.plot(new_array_y, new_array_x)
+
 
 
     sos = signal.iirfilter(4, Wn=[0.1, 2.5], fs=30, btype="bandpass", ftype="butter", output="sos")
@@ -233,25 +231,35 @@ for image_counter, image in enumerate(image_array):
 
     # figure_area = plt.plot(yfilt)
 
-    # figure_fft = plt.xlim(0, 0.2)
     data_step = 0.1
     n = len(new_array_y)
     yf = rfft(new_array_x)
     xf = rfftfreq(n, data_step)
-    # figure_fft = plt.plot(xf, np.abs(yf))
 
     yf_abs = np.abs(yf)
     yf_max = np.max(yf_abs)
     print(yf_max)
 
     
-
-    indices = yf_abs > (5.0/100*yf_max)
+    multiplier = 5
+    MIN_multiplier = 5
+    indices = yf_abs > (multiplier/100*yf_max)
     yf_clean = indices*yf
-    print(yf_clean)
+    new_f_clean = irfft(yf_clean)
+    x_peaks = signal.find_peaks(np.array(new_f_clean))
+    MIN_x_peaks = signal.find_peaks(np.array(-new_f_clean))
+
+    while len(x_peaks[0]) > 50 or len(MIN_x_peaks[0]) > 50:
+        indices = yf_abs > (multiplier/100*yf_max)
+        yf_clean = indices*yf
+        new_f_clean = irfft(yf_clean)
+        x_peaks = signal.find_peaks(np.array(new_f_clean))
+        MIN_x_peaks = signal.find_peaks(np.array(-new_f_clean))
+
+        multiplier = multiplier+5
+
     # figure_fft = plt.plot(xf, np.abs(yf_clean))
 
-    new_f_clean = irfft(yf_clean)
     if len(new_array_y) > len(new_f_clean):
         new_new_array_y = new_array_y
         new_new_array_y.pop(0)
@@ -262,8 +270,12 @@ for image_counter, image in enumerate(image_array):
     # Area under the curve, using numpy's trapz formula
     total_area_trapz_x = round(trapz(new_array_x), 2)
     results_array[image_counter][Results.AREA_TRAPZ.value] = round(total_area_trapz_x, 2)
-    figure_area = plt.text(400, 15, "Area: " + str(total_area_trapz_x), bbox=dict(facecolor='red', alpha=0.5))
+    figure_fft = plt.text(400, 15, "Area: " + str(total_area_trapz_x), bbox=dict(facecolor='red', alpha=0.5))
+    # figure_area = plt.text(400, 10, "NUMPOINTS: " + str(len(new_array_x)), bbox=dict(facecolor='red', alpha=0.5))
 
+    figure_fft = plt.xlim(0, 600)
+    # figure_fft = plt.ylim(0, 20)
+    
     # Quantile values of the data
     min, q1, q2, q3, q90, max = np.quantile(new_array_x, [0, 0.25, 0.5, 0.75, 0.9, 1])
     iqr = q3-q1
@@ -271,15 +283,56 @@ for image_counter, image in enumerate(image_array):
     # figure_area = plt.text(400, 10, "Q75: " + str(round(q3, 2)), bbox=dict(facecolor='red', alpha=0.5))
     # figure_area = plt.text(400, 5, "IQR: " + str(round(iqr, 2)), bbox=dict(facecolor='red', alpha=0.5))
 
-    ## NEW CODE HERE: 
-    num_peaks = signal.find_peaks(np.array(new_array_x), threshold=q3)
-    print(len(num_peaks[0]))
-    print(num_peaks)
 
+
+    ## NEW CODE HERE: 
+    x_peaks = signal.find_peaks(np.array(new_f_clean))
+    num_peaks = len(x_peaks[0])
+    # print("NUM PEAKS: " + str(num_peaks))
+    figure_fft = plt.text(400, 10, "NUM PEAKS: " + str(num_peaks), bbox=dict(facecolor='red', alpha=0.5))
+
+    y_peaks_points = []
+    x_peaks_points = []
+    sum_peaks = 0
+    for p in x_peaks[0]:
+        sum_peaks = sum_peaks + new_f_clean[p]
+        # print(str(p) + ": " + str(new_f_clean[p]))
+        x_peaks_points.append(new_f_clean[p])
+        y_peaks_points.append(new_array_y[p])
+
+    average_peaks = sum_peaks/num_peaks
+    # print(average_peaks)
+    figure_fft = plt.text(400, 5, "AVERAGE PEAKS: " + str(average_peaks), bbox=dict(facecolor='red', alpha=0.5))
+
+    figure_fft = plt.plot(y_peaks_points, x_peaks_points, marker="x", linestyle="None", color='purple')
     # figure_area = plt.text(400, 20, "Num Peaks: " + str(len(num_peaks[0])), bbox=dict(facecolor='blue', alpha=0.5))
 
 
     ## END OF NEW CODE 
+
+
+
+    ## NEW CODE HERE: 
+    MIN_x_peaks = signal.find_peaks(np.array(-new_f_clean))
+    MIN_num_peaks = len(MIN_x_peaks[0])
+    # print(MIN_num_peaks)
+    figure_fft = plt.text(400, 10, "NUM PEAKS: " + str(MIN_num_peaks), bbox=dict(facecolor='red', alpha=0.5))
+
+    MIN_y_peaks_points = []
+    MIN_x_peaks_points = []
+    MIN_sum_peaks = 0
+    for p in MIN_x_peaks[0]:
+        MIN_sum_peaks = MIN_sum_peaks + new_f_clean[p]
+        # print(str(p) + ": " + str(new_f_clean[p]))
+        MIN_x_peaks_points.append(new_f_clean[p])
+        MIN_y_peaks_points.append(new_array_y[p])
+
+    MIN_average_peaks = MIN_sum_peaks/MIN_num_peaks
+    # print(MIN_average_peaks)
+    figure_fft = plt.text(400, 5, "AVERAGE PEAKS: " + str(MIN_average_peaks), bbox=dict(facecolor='red', alpha=0.5))
+
+    figure_fft = plt.plot(MIN_y_peaks_points, MIN_x_peaks_points, marker="x", linestyle="None", color='green')
+    # figure_area = plt.text(400, 20, "Num Peaks: " + str(len(num_peaks[0])), bbox=dict(facecolor='blue', alpha=0.5))
 
 
 
