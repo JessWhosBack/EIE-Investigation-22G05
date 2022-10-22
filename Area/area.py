@@ -32,17 +32,16 @@ class Results(Enum):
     TIME_PERIOD = 3
 
     AREA_TRAPZ = 4
-    Q2 = 5
-    Q3 = 6
-    MAX = 7
-    STDDEV = 8
+    MAX = 5
+    STDDEV = 6
 
-    AVG_AREA_TRAPZ = 9
-    AVG_AREA_MIN = 10
-    AVG_AREA_Q2 = 11
-    AVG_AREA_Q3 = 12
-    AVG_AREA_MAX = 13
-    AVG_AREA_STDDEV = 14
+    AVG_AREA_TRAPZ = 7
+    AVG_AREA_MAX = 8
+    AVG_AREA_STDDEV = 9
+
+    NUM_PEAKS = 10
+    AVG_PEAK_DIST = 11
+
     
 # Read in the .jpgs and save into an image array, ensuring grayscale- - - - - - - - - - - - - - - - - - - - - - - - - - - #
 image_array = []
@@ -253,7 +252,6 @@ for image_counter, image in enumerate(image_array):
     # EXTRACTING OF NUMERICAL DATA FROM THE ABOVE GRAPH - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
     # Area under the curve, using numpy's trapz formula
     total_area_trapz_x = trapz(new_array_x_ABS)
-    results_array[image_counter][Results.AREA_TRAPZ.value] = total_area_trapz_x
     figure_fft = plt.text(100, 10, "Abs Area: " + str(round(total_area_trapz_x, 2)), bbox=dict(facecolor='beige', alpha=0.5))
 
     figure_fft = plt.xlim(0, 600)
@@ -318,14 +316,9 @@ for image_counter, image in enumerate(image_array):
 
 
 
-
-    # results_array[image_counter][Results.MIN.value] = min, 2
-    # results_array[image_counter][Results.Q1.value] = q1, 2
-    results_array[image_counter][Results.Q2.value] = q2, 2
-    results_array[image_counter][Results.Q3.value] = q3, 2
-    results_array[image_counter][Results.MAX.value] = max, 2
-    # results_array[image_counter][Results.IQR.value] = iqr, 2
-    results_array[image_counter][Results.STDDEV.value] = std, 2
+    results_array[image_counter][Results.AREA_TRAPZ.value] = total_area_trapz_x
+    results_array[image_counter][Results.MAX.value] = max
+    results_array[image_counter][Results.STDDEV.value] = std
 
     average_areas = []
     temp_counter = 1
@@ -360,13 +353,12 @@ for image_counter, image in enumerate(image_array):
     avg_std = np.std(average_areas)
 
     results_array[image_counter][Results.AVG_AREA_TRAPZ.value] = avg_avg_area
-    results_array[image_counter][Results.AVG_AREA_MIN.value] = avg_min
-    # results_array[image_counter][Results.AVG_AREA_Q1.value] = avg_q1
-    results_array[image_counter][Results.AVG_AREA_Q2.value] = avg_q2
-    results_array[image_counter][Results.AVG_AREA_Q3.value] = avg_q3
     results_array[image_counter][Results.AVG_AREA_MAX.value] = avg_max
-    # results_array[image_counter][Results.AVG_AREA_IQR.value] = avg_iqr
     results_array[image_counter][Results.AVG_AREA_STDDEV.value] = avg_std
+
+    results_array[image_counter][Results.NUM_PEAKS.value] = num_peaks
+    results_array[image_counter][Results.AVG_PEAK_DIST.value] = average_peakmin_distance
+
     # except:
     #     print("ERROR")
 
@@ -383,3 +375,5 @@ display(df)
 
 df.to_csv('Area/Result/Results.csv', index=False)
 # END OF CODE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+
+
