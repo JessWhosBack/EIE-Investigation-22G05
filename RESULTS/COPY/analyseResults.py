@@ -1,6 +1,5 @@
 import csv
 from matplotlib import pyplot as plt
-import numpy as np
 import pandas as pd
 
 # class Results(Enum):
@@ -566,167 +565,48 @@ ND_data = {'Patient': ND_patient_number_array, 'Before' : ND_time_before, '1 Wee
 ND_df = pd.DataFrame(ND_data)
 ND_df.to_csv('RESULTS/ND_Determinant2.csv', index=False)
 
-
-
-
-
-
-
-
-
 # - - - - - - - - - - - - - - - - - - - - - - - - GRAPHS 
 def checkImproved(before, arr):
     improved = 0
     both = 0
-    avg_amount = 0
-    avg_diff = 0
-    avg_diff_improved = 0
 
     for i in range(len(before)):
         if ((before[i] != 0) and (arr[i] != 0)):
             both += 1
-            avg_diff += before[i] - arr[i]
-
             if(arr[i] < before[i]):
                 improved += 1
-                avg_amount += arr[i]
-                avg_diff_improved += before[i] - arr[i]
-
-    avg_diff = avg_diff/both
-    avg_diff_improved = avg_diff_improved/improved
-    avg_amount = avg_amount/improved
-    return both, improved, avg_amount, avg_diff, avg_diff_improved
-
-D_both_1W, D_improved_1W, D_avg_amount_1W, D_avg_diff_1W, D_avg_diff_improved_1W = checkImproved(D_time_before, D_time_1W)
-D_both_1M, D_improved_1M, D_avg_amount_1M, D_avg_diff_1M, D_avg_diff_improved_1M = checkImproved(D_time_before, D_time_1M)
-D_both_3M, D_improved_3M, D_avg_amount_3M, D_avg_diff_3M, D_avg_diff_improved_3M = checkImproved(D_time_before, D_time_3M)
-D_both_6M, D_improved_6M, D_avg_amount_6M, D_avg_diff_6M, D_avg_diff_improved_6M = checkImproved(D_time_before, D_time_6M)
-D_both_1Y, D_improved_1Y, D_avg_amount_1Y, D_avg_diff_1Y, D_avg_diff_improved_1Y = checkImproved(D_time_before, D_time_1Y)
-D_both_2Y, D_improved_2Y, D_avg_amount_2Y, D_avg_diff_2Y, D_avg_diff_improved_2Y = checkImproved(D_time_before, D_time_2Y)
-D_both_3Y, D_improved_3Y, D_avg_amount_3Y, D_avg_diff_3Y, D_avg_diff_improved_3Y = checkImproved(D_time_before, D_time_3Y)
-D_both_4Y, D_improved_4Y, D_avg_amount_4Y, D_avg_diff_4Y, D_avg_diff_improved_4Y = checkImproved(D_time_before, D_time_4Y)
-
-D_improved_percentage = [D_improved_1W/D_both_1W*100, D_improved_1M/D_both_1M*100, D_improved_3M/D_both_3M*100, D_improved_6M/D_both_6M*100, D_improved_1Y/D_both_1Y*100, D_improved_2Y/D_both_2Y*100, D_improved_3Y/D_both_3Y*100, D_improved_4Y/D_both_4Y*100]
-D_avg_improved_amount = [D_avg_amount_1W, D_avg_amount_1M, D_avg_amount_3M, D_avg_amount_6M, D_avg_amount_1Y, D_avg_amount_2Y, D_avg_amount_3Y, D_avg_amount_4Y]
-D_num_improved = [D_improved_1W, D_improved_1M, D_improved_3M, D_improved_6M, D_improved_1Y, D_improved_2Y, D_improved_3Y, D_improved_4Y]
-D_total_num = [D_both_1W, D_both_1M, D_both_3M, D_both_6M, D_both_1Y, D_both_2Y, D_both_3Y, D_both_4Y]
-D_avg_diff = [D_avg_diff_1W, D_avg_diff_1M, D_avg_diff_3M, D_avg_diff_6M, D_avg_diff_1Y, D_avg_diff_2Y, D_avg_diff_3Y, D_avg_diff_4Y]
-D_avg_diff_improved = [D_avg_diff_improved_1W, D_avg_diff_improved_1M, D_avg_diff_improved_3M, D_avg_diff_improved_6M, D_avg_diff_improved_1Y, D_avg_diff_improved_2Y, D_avg_diff_improved_3Y, D_avg_diff_improved_4Y]
-
-ND_both_1W, ND_improved_1W, ND_avg_amount_1W, ND_avg_diff_1W, ND_avg_diff_improved_1W = checkImproved(ND_time_before, ND_time_1W)
-ND_both_1M, ND_improved_1M, ND_avg_amount_1M, ND_avg_diff_1M, ND_avg_diff_improved_1M = checkImproved(ND_time_before, ND_time_1M)
-ND_both_3M, ND_improved_3M, ND_avg_amount_3M, ND_avg_diff_3M, ND_avg_diff_improved_3M = checkImproved(ND_time_before, ND_time_3M)
-ND_both_6M, ND_improved_6M, ND_avg_amount_6M, ND_avg_diff_6M, ND_avg_diff_improved_6M = checkImproved(ND_time_before, ND_time_6M)
-ND_both_1Y, ND_improved_1Y, ND_avg_amount_1Y, ND_avg_diff_1Y, ND_avg_diff_improved_1Y = checkImproved(ND_time_before, ND_time_1Y)
-ND_both_2Y, ND_improved_2Y, ND_avg_amount_2Y, ND_avg_diff_2Y, ND_avg_diff_improved_2Y = checkImproved(ND_time_before, ND_time_2Y)
-ND_both_3Y, ND_improved_3Y, ND_avg_amount_3Y, ND_avg_diff_3Y, ND_avg_diff_improved_3Y = checkImproved(ND_time_before, ND_time_3Y)
-ND_both_4Y, ND_improved_4Y, ND_avg_amount_4Y, ND_avg_diff_4Y, ND_avg_diff_improved_4Y = checkImproved(ND_time_before, ND_time_4Y)
-
-ND_improved_percentage = [ND_improved_1W/ND_both_1W*100, ND_improved_1M/ND_both_1M*100, ND_improved_3M/ND_both_3M*100, ND_improved_6M/ND_both_6M*100, ND_improved_1Y/ND_both_1Y*100, ND_improved_2Y/ND_both_2Y*100, ND_improved_3Y/ND_both_3Y*100, ND_improved_4Y/ND_both_4Y*100]
-ND_avg_improved_amount = [ND_avg_amount_1W, ND_avg_amount_1M, ND_avg_amount_3M, ND_avg_amount_6M, ND_avg_amount_1Y, ND_avg_amount_2Y, ND_avg_amount_3Y, ND_avg_amount_4Y]
-ND_num_improved = [ND_improved_1W, ND_improved_1M, ND_improved_3M, ND_improved_6M, ND_improved_1Y, ND_improved_2Y, ND_improved_3Y, ND_improved_4Y]
-ND_total_num = [ND_both_1W, ND_both_1M, ND_both_3M, ND_both_6M, ND_both_1Y, ND_both_2Y, ND_both_3Y, ND_both_4Y]
-ND_avg_diff = [ND_avg_diff_1W, ND_avg_diff_1M, ND_avg_diff_3M, ND_avg_diff_6M, ND_avg_diff_1Y, ND_avg_diff_2Y, ND_avg_diff_3Y, ND_avg_diff_4Y]
-ND_avg_diff_improved = [ND_avg_diff_improved_1W, ND_avg_diff_improved_1M, ND_avg_diff_improved_3M, ND_avg_diff_improved_6M, ND_avg_diff_improved_1Y, ND_avg_diff_improved_2Y, ND_avg_diff_improved_3Y, ND_avg_diff_improved_4Y]
-
-avg_total_num = [(D_both_1W+ND_both_1W)/2, (D_both_1M+ND_both_1M)/2, (D_both_3M+ND_both_3M)/2, (D_both_6M+ND_both_6M)/2, (D_both_1Y+ND_both_1Y)/2, (D_both_2Y+ND_both_2Y)/2, (D_both_3Y+ND_both_3Y)/2, (D_both_4Y+ND_both_4Y)/2]
+    return both, improved
 
 
 
-print("3Y: " + str(ND_avg_diff_3Y))
 
-## GENERAL GRAPH SETTINGS
-plt.rcParams["font.family"] = "Times New Roman"
-plt.rc('axes', axisbelow=True)
-plt.rcParams.update({'font.size': 12})
 
-## GRAPH 1: PERCENTAGE OF PATIENTS WITH TREMOR BEFORE TREATMENT THAT IMPROVED AFTER VARIOUS TREATMENT TIMES
-x = ['1W', '1M', '3M', '6M', '1Y', '2Y', '3Y', '4Y']
-x_axis = np.arange(len(x))
-fig, ax1 = plt.subplots(figsize = (8,4))
-plt.title('Percentage of Patients with Tremor Before Treatment that Improved \nAfter Various Treatment Times')
-plt.grid(linestyle = '-', linewidth=0.5, axis='y')
+D_both_1W, D_improved_1W = checkImproved(D_time_before, D_time_1W)
+D_both_1M, D_improved_1M = checkImproved(D_time_before, D_time_1M)
+D_both_3M, D_improved_3M = checkImproved(D_time_before, D_time_3M)
+D_both_6M, D_improved_6M = checkImproved(D_time_before, D_time_6M)
+D_both_1Y, D_improved_1Y = checkImproved(D_time_before, D_time_1Y)
+D_both_2Y, D_improved_2Y = checkImproved(D_time_before, D_time_2Y)
+D_both_3Y, D_improved_3Y = checkImproved(D_time_before, D_time_3Y)
+D_both_4Y, D_improved_4Y = checkImproved(D_time_before, D_time_4Y)
+D_improved_percentage = [D_improved_1W/D_both_1W, D_improved_1M/D_both_1M, D_improved_3M/D_both_3M, D_improved_6M/D_both_6M, D_improved_1Y/D_both_1Y, D_improved_2Y/D_both_2Y, D_improved_3Y/D_both_3Y, D_improved_4Y/D_both_4Y]
 
-ax1.bar(x_axis - 0.15, D_improved_percentage, 0.3, label = 'Dominant Hand', color = 'darkblue')
-ax1.bar(x_axis + 0.15, ND_improved_percentage, 0.3, label = 'Dominant Hand', color = 'cornflowerblue')
-ax1.set_ylabel('Percentage of patients that improved')
-ax1.legend(['Dominant Hand', 'Non-Dominant Hand'], loc="upper right")
-ax1.set_ylim(0, 100)
-ax2 = ax1.twinx()
-ax2.plot(x, avg_total_num, color = 'red')
-ax2.set_ylabel('Number of patients total')
-ax2.legend(['Number of patients'], loc="upper center")
-ax2.set_ylim(0, 100)
-## GRAPH 1: PERCENTAGE OF PATIENTS WITH TREMOR BEFORE TREATMENT THAT IMPROVED AFTER VARIOUS TREATMENT TIMES
+ND_both_1W, ND_improved_1W = checkImproved(D_time_before, D_time_1W)
+ND_both_1M, ND_improved_1M = checkImproved(D_time_before, D_time_1M)
+ND_both_3M, ND_improved_3M = checkImproved(D_time_before, D_time_3M)
+ND_both_6M, ND_improved_6M = checkImproved(D_time_before, D_time_6M)
+ND_both_1Y, ND_improved_1Y = checkImproved(D_time_before, D_time_1Y)
+ND_both_2Y, ND_improved_2Y = checkImproved(D_time_before, D_time_2Y)
+ND_both_3Y, ND_improved_3Y = checkImproved(D_time_before, D_time_3Y)
+ND_both_4Y, ND_improved_4Y = checkImproved(D_time_before, D_time_4Y)
+ND_improved_percentage = [ND_improved_1W/ND_both_1W, ND_improved_1M/ND_both_1M, ND_improved_3M/ND_both_3M, ND_improved_6M/ND_both_6M, ND_improved_1Y/ND_both_1Y, ND_improved_2Y/ND_both_2Y, ND_improved_3Y/ND_both_3Y, ND_improved_4Y/ND_both_4Y]
 
-## GRAPH 2: PERCENTAGE OF PATIENTS WITH TREMOR BEFORE TREATMENT THAT IMPROVED AFTER VARIOUS TREATMENT TIMES
-fig, ax1 = plt.subplots(figsize = (8,4))
-plt.grid(linestyle = '-', linewidth=0.5, axis='y')
-plt.title('Difference Between Tremor Severity Before Treatment and After Various Treatment Periods')
-
-ax1.bar(x_axis - 0.15, D_avg_diff_improved, 0.3, label = 'Dominant Hand', color = 'darkblue')
-ax1.bar(x_axis + 0.15, ND_avg_diff_improved, 0.3, label = 'Dominant Hand', color = 'cornflowerblue')
-ax1.set_ylabel('Difference in Tremor')
-ax1.legend(['Dominant Hand', 'Non-Dominant Hand'], loc="upper right")
-# ax1.set_ylim(0, 100)
-ax2 = ax1.twinx()
-ax2.plot(x, D_num_improved, color = 'red')
-ax2.plot(x, ND_num_improved, color = 'green')
-ax2.set_ylabel('Number of patients total')
-ax2.legend(['Dominant Hand', 'Non-Dominant Hand'], loc="upper center")
-ax2.set_ylim(0, 100)
-plt.xticks(x_axis, x)
+x_axis = ['1W', '1M', '3M', '6M', '1Y', '2Y', '3Y', '4Y']
+plt_1 = plt.figure(figsize=(8, 4))
+plt.bar(x_axis, D_improved_percentage, label = 'Dominant Hand', color = 'mediumblue')
+plt.bar(x_axis, ND_improved_percentage, label = 'Non-Dominant Hand', color = 'slategrey')
 plt.show()
-## GRAPH: PERCENTAGE OF PATIENTS WITH TREMOR BEFORE TREATMENT THAT IMPROVED AFTER VARIOUS TREATMENT TIMES
-
-
-
-
-
-
-
-
-
-plt.show()
-
-
-
-
-
-
-
-
-
-
-
-
-
-# plt.rcParams["font.family"] = "Times New Roman"
-# plt.rc('axes', axisbelow=True)
-# plt.rcParams.update({'font.size': 12})
-
-# plt_1 = plt.figure(figsize=(8, 4))
-
-# plt.grid(linestyle = '-', linewidth=0.5, axis='y')
-# plt.title('Percentage of Patients with Tremor Before Treatment that Improved \nAfter Various Treatment Times')
-
-# x = ['1W', '1M', '3M', '6M', '1Y', '2Y', '3Y', '4Y']
-# x_axis = np.arange(len(x))
-
-# # plt.bar(x_axis - 0.15, D_improved_percentage, 0.3, label = 'Dominant Hand', color = 'darkblue')
-# # plt.bar(x_axis + 0.15, ND_improved_percentage, 0.3, label = 'Non-Dominant Hand', color = 'cornflowerblue')
-
-# plt.bar(x_axis - 0.15, D_num_improved, 0.3, label = 'Dominant Hand', color = 'darkblue')
-# plt.bar(x_axis + 0.15, ND_num_improved, 0.3, label = 'Non-Dominant Hand', color = 'cornflowerblue')
-
-
-# plt.xticks(x_axis, x)
-
-# plt.xlabel('Time')
-# plt.ylabel('Percentage that Improved')
-# plt.legend()
-# plt.show()
-# # - - - - - - - - - - - - - - - - - - - - - - - - END OF GRAPHS 
+# - - - - - - - - - - - - - - - - - - - - - - - - END OF GRAPHS 
 
 
 
