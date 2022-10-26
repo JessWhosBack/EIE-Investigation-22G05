@@ -1,5 +1,4 @@
 import csv
-from sys import maxsize
 import pandas as pd
 
 # class Results(Enum):
@@ -97,10 +96,6 @@ for i in range(0, n):
             patient_determinator_2[j] = patient_determinator_2[j+1]
             patient_determinator_2[j+1] = temp
 
-
-print(patient_determinator_2)
-
-
 new1_patient_time_array = patient_time_array.copy()
 new1_patient_determinator_1 = patient_determinator_1.copy()
 new1_patient_num_peaks = patient_num_peaks.copy()
@@ -123,11 +118,6 @@ for i in range(0, n):
             temp = new1_patient_avg_peak_dist[j]
             new1_patient_avg_peak_dist[j] = new1_patient_avg_peak_dist[j+1]
             new1_patient_avg_peak_dist[j+1] = temp
-
-print("DETERMINATOR 1: ")
-for i in range(0, n):
-    print(str(new1_patient_time_array[i]) + ": " + str(round(new1_patient_determinator_1[i], 4)) + " (" + str(new1_patient_num_peaks[i]) + "  " + str(new1_patient_avg_peak_dist[i]) + ")")
-print()
 
 new2_patient_time_array = patient_time_array.copy()
 new2_patient_determinator_2 = patient_determinator_2.copy()
@@ -154,38 +144,7 @@ for i in range(0, n):
             new2_patient_avg_peak_dist[j] = new2_patient_avg_peak_dist[j+1]
             new2_patient_avg_peak_dist[j+1] = temp
 
-print("DETERMINATOR 2: ")
-for i in range(0, n):
-    print(str(new2_patient_time_array[i]) + ": " + str(round(new2_patient_determinator_2[i], 4)) + " (" + str(new2_patient_num_peaks[i]) + "  " + str(new2_patient_avg_peak_dist[i]) + ")")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ### THE BELOW CODE WORKS BUT ALSO LIKE WTF IT'S SO LONG
-
-
 D_patient_number_array = []
 D_patient_number_array.append(1)
 D_patient_counter = 0
@@ -244,7 +203,6 @@ for i in range(0, n):
     if float(patient_avg_std_dev_array[i]) < float(min_std_dev) and float(patient_avg_std_dev_array[i]) >= float(0.0):
         min_std_dev = patient_avg_std_dev_array[i]
 
-    print(str(patient_dominant_hand[i]))
     if patient_dominant_hand[i] == 'True':
         if int(patient_number_array[i]) != int(D_patient_number_array[D_patient_counter]):
             D_patient_number_array.append(patient_number_array[i])
@@ -291,7 +249,6 @@ for i in range(0, n):
             ND_time_2Y.append(0)
             ND_time_3Y.append(0)
             ND_time_4Y.append(0)
-        print("patient counter: " + str(ND_patient_counter) + " pna: " + str(patient_number_array[i]) + " NDORD_pna: "+ str(ND_patient_number_array[ND_patient_counter]))
 
         if patient_time_array[i] == "before":
             ND_time_before[ND_patient_counter] = patient_avg_std_dev_array[i]
@@ -312,9 +269,6 @@ for i in range(0, n):
         elif patient_time_array[i] == "4Y":
             ND_time_4Y[ND_patient_counter] = patient_avg_std_dev_array[i]
                 
-print(max_std_dev)
-print(min_std_dev)
-
 D_data = {'Patient': D_patient_number_array, 'Before' : D_time_before, '1 Week' : D_time_1W, '1 Month' : D_time_1M, '3 Months': D_time_3M, '6 Months': D_time_6M, '1 Year': D_time_1Y, '2 Years': D_time_2Y, '3 Years':D_time_3Y, '4 Years':D_time_4Y }
 D_df = pd.DataFrame(D_data)
 D_df.to_csv('RESULTS/D_AvgStdDev.csv', index=False)
@@ -387,7 +341,6 @@ for i in range(0, n):
     if float(patient_avg_area_trapz[i]) < float(min_area) and float(patient_avg_area_trapz[i]) >= float(0.0):
         min_area = patient_avg_area_trapz[i]
 
-    print(str(patient_dominant_hand[i]))
     if patient_dominant_hand[i] == 'True':
         if int(patient_number_array[i]) != int(D_patient_number_array[D_patient_counter]):
             D_patient_number_array.append(patient_number_array[i])
@@ -434,7 +387,6 @@ for i in range(0, n):
             ND_time_2Y.append(0)
             ND_time_3Y.append(0)
             ND_time_4Y.append(0)
-        print("patient counter: " + str(ND_patient_counter) + " pna: " + str(patient_number_array[i]) + " NDORD_pna: "+ str(ND_patient_number_array[ND_patient_counter]))
 
         if patient_time_array[i] == "before":
             ND_time_before[ND_patient_counter] = patient_avg_area_trapz[i]
@@ -455,9 +407,6 @@ for i in range(0, n):
         elif patient_time_array[i] == "4Y":
             ND_time_4Y[ND_patient_counter] = patient_avg_area_trapz[i]
                 
-print(max_area)
-print(min_area)
-
 D_data = {'Patient': D_patient_number_array, 'Before' : D_time_before, '1 Week' : D_time_1W, '1 Month' : D_time_1M, '3 Months': D_time_3M, '6 Months': D_time_6M, '1 Year': D_time_1Y, '2 Years': D_time_2Y, '3 Years':D_time_3Y, '4 Years':D_time_4Y }
 D_df = pd.DataFrame(D_data)
 D_df.to_csv('RESULTS/D_AreaTrapz.csv', index=False)
@@ -584,7 +533,6 @@ for i in range(0, n):
             ND_time_2Y.append(0)
             ND_time_3Y.append(0)
             ND_time_4Y.append(0)
-        print("patient counter: " + str(ND_patient_counter) + " pna: " + str(patient_number_array[i]) + " NDORD_pna: "+ str(ND_patient_number_array[ND_patient_counter]))
 
         if patient_time_array[i] == "before":
             ND_time_before[ND_patient_counter] = patient_determinator_2[i]
@@ -619,32 +567,112 @@ ND_df.to_csv('RESULTS/ND_Determinant2.csv', index=False)
 
 
 
-# normalised_time_before = []
-# normalised_time_1W = []
-# normalised_time_1M = []
-# normalised_time_3M = []
-# normalised_time_6M = []
-# normalised_time_1Y = []
-# normalised_time_2Y = []
-# normalised_time_3Y = []
-# normalised_time_4Y = []
+D_normalised_time_before = []
+D_normalised_time_1W = []
+D_normalised_time_1M = []
+D_normalised_time_3M = []
+D_normalised_time_6M = []
+D_normalised_time_1Y = []
+D_normalised_time_2Y = []
+D_normalised_time_3Y = []
+D_normalised_time_4Y = []
 
-# denominator = float(max_std_dev)-float(min_std_dev)
-# for i in range(0, patient_counter+1):
-#     normalised_time_before.append(round((float(time_before[i])-float(min_std_dev))/denominator, 3))
-#     normalised_time_1W.append(round((float(time_1W[i])-float(min_std_dev))/denominator, 3))
-#     normalised_time_1M.append(round((float(time_1M[i])-float(min_std_dev))/denominator, 3))
-#     normalised_time_3M.append(round((float(time_3M[i])-float(min_std_dev))/denominator, 3))
-#     normalised_time_6M.append(round((float(time_6M[i])-float(min_std_dev))/denominator, 3))
-#     normalised_time_1Y.append(round((float(time_1Y[i])-float(min_std_dev))/denominator, 3))
-#     normalised_time_2Y.append(round((float(time_2Y[i])-float(min_std_dev))/denominator, 3))
-#     normalised_time_3Y.append(round((float(time_3Y[i])-float(min_std_dev))/denominator, 3))
-#     normalised_time_4Y.append(round((float(time_4Y[i])-float(min_std_dev))/denominator, 3))
+ND_normalised_time_before = []
+ND_normalised_time_1W = []
+ND_normalised_time_1M = []
+ND_normalised_time_3M = []
+ND_normalised_time_6M = []
+ND_normalised_time_1Y = []
+ND_normalised_time_2Y = []
+ND_normalised_time_3Y = []
+ND_normalised_time_4Y = []
+
+denominator = float(max_det)-float(min_det)
+for i in range(0, D_patient_counter+1):
+    if D_time_before[i] != 0:
+        D_normalised_time_before.append((float(D_time_before[i])-float(min_det))/denominator)
+    else:
+        D_normalised_time_before.append(0)
+    if D_time_1W[i] != 0:
+        D_normalised_time_1W.append((float(D_time_1W[i])-float(min_det))/denominator)
+    else:
+        D_normalised_time_1W.append(0)
+    if D_time_1M[i] != 0:
+        D_normalised_time_1M.append((float(D_time_1M[i])-float(min_det))/denominator)
+    else:
+        D_normalised_time_1M.append(0)
+    if D_time_3M[i] != 0:
+        D_normalised_time_3M.append((float(D_time_3M[i])-float(min_det))/denominator)
+    else:
+        D_normalised_time_3M.append(0)
+    if D_time_6M[i] != 0:
+        D_normalised_time_6M.append((float(D_time_6M[i])-float(min_det))/denominator)
+    else:
+        D_normalised_time_6M.append(0)
+    if D_time_1Y[i] != 0:
+        D_normalised_time_1Y.append((float(D_time_1Y[i])-float(min_det))/denominator)
+    else:
+        D_normalised_time_1Y.append(0)
+    if D_time_2Y[i] != 0:
+        D_normalised_time_2Y.append((float(D_time_2Y[i])-float(min_det))/denominator)
+    else:
+        D_normalised_time_2Y.append(0)
+    if D_time_3Y[i] != 0:
+        D_normalised_time_3Y.append((float(D_time_3Y[i])-float(min_det))/denominator)
+    else:
+        D_normalised_time_3Y.append(0)
+    if D_time_4Y[i] != 0:
+        D_normalised_time_4Y.append((float(D_time_4Y[i])-float(min_det))/denominator)
+    else:
+        D_normalised_time_4Y.append(0)
 
 
-# data_normalised = {'Patient': ND_patient_number_array, 'Before' : normalised_time_before, '1 Week' : normalised_time_1W, '1 Month' : normalised_time_1M, '3 Months': normalised_time_3M, '6 Months': normalised_time_6M, '1 Year': normalised_time_1Y, '2 Years': normalised_time_2Y, '3 Years':normalised_time_3Y, '4 Years':normalised_time_4Y }
-# df_normalised = pd.DataFrame(data_normalised)
-# df_normalised.to_csv('RESULTS\Results_AvgStdDev_Normalised.csv', index=False)
+data_normalised = {'Patient': D_patient_number_array, 'Before' : D_normalised_time_before, '1 Week' : D_normalised_time_1W, '1 Month' : D_normalised_time_1M, '3 Months': D_normalised_time_3M, '6 Months': D_normalised_time_6M, '1 Year': D_normalised_time_1Y, '2 Years': D_normalised_time_2Y, '3 Years': D_normalised_time_3Y, '4 Years': D_normalised_time_4Y }
+df_normalised = pd.DataFrame(data_normalised)
+df_normalised.to_csv('RESULTS\D_Determinant2_NORMALIZED.csv', index=False)
+
+for i in range(0, ND_patient_counter+1):
+    if ND_time_before[i] != 0:
+        ND_normalised_time_before.append((float(ND_time_before[i])-float(min_det))/denominator)
+    else:
+        ND_normalised_time_before.append(0)
+    if ND_time_1W[i] != 0:
+        ND_normalised_time_1W.append((float(ND_time_1W[i])-float(min_det))/denominator)
+    else:
+        ND_normalised_time_1W.append(0)
+    if ND_time_1M[i] != 0:
+        ND_normalised_time_1M.append((float(ND_time_1M[i])-float(min_det))/denominator)
+    else:
+        ND_normalised_time_1M.append(0)
+    if ND_time_3M[i] != 0:
+        ND_normalised_time_3M.append((float(ND_time_3M[i])-float(min_det))/denominator)
+    else:
+        ND_normalised_time_3M.append(0)
+    if ND_time_6M[i] != 0:
+        ND_normalised_time_6M.append((float(ND_time_6M[i])-float(min_det))/denominator)
+    else:
+        ND_normalised_time_6M.append(0)
+    if ND_time_1Y[i] != 0:
+        ND_normalised_time_1Y.append((float(ND_time_1Y[i])-float(min_det))/denominator)
+    else:
+        ND_normalised_time_1Y.append(0)
+    if ND_time_2Y[i] != 0:
+        ND_normalised_time_2Y.append((float(ND_time_2Y[i])-float(min_det))/denominator)
+    else:
+        ND_normalised_time_2Y.append(0)
+    if ND_time_3Y[i] != 0:
+        ND_normalised_time_3Y.append((float(ND_time_3Y[i])-float(min_det))/denominator)
+    else:
+        ND_normalised_time_3Y.append(0)
+    if ND_time_4Y[i] != 0:
+        ND_normalised_time_4Y.append((float(ND_time_4Y[i])-float(min_det))/denominator)
+    else:
+        ND_normalised_time_4Y.append(0)
+
+
+data_normalised = {'Patient': ND_patient_number_array, 'Before' : ND_normalised_time_before, '1 Week' : ND_normalised_time_1W, '1 Month' : ND_normalised_time_1M, '3 Months': ND_normalised_time_3M, '6 Months': ND_normalised_time_6M, '1 Year': ND_normalised_time_1Y, '2 Years': ND_normalised_time_2Y, '3 Years': ND_normalised_time_3Y, '4 Years': ND_normalised_time_4Y }
+df_normalised = pd.DataFrame(data_normalised)
+df_normalised.to_csv('RESULTS/ND_Determinant2_NORMALIZED.csv', index=False)
 
 
 
