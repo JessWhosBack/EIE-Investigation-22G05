@@ -31,17 +31,18 @@ class Results(Enum):
     DOMINANT_HAND = 2
     TREATED_HAND = 3
     TIME_PERIOD = 4
+    PD_HAND = 5
 
-    AREA_TRAPZ = 5
-    MAX = 6
-    STDDEV = 7
+    AREA_TRAPZ = 6
+    MAX = 7
+    STDDEV = 8
 
-    AVG_AREA_TRAPZ = 8
-    AVG_AREA_MAX = 9
-    AVG_AREA_STDDEV = 10
+    AVG_AREA_TRAPZ = 9
+    AVG_AREA_MAX = 10
+    AVG_AREA_STDDEV = 11
 
-    NUM_PEAKS = 11
-    AVG_PEAK_DIST = 12
+    NUM_PEAKS = 12
+    AVG_PEAK_DIST = 13
     
 # Read in the .jpgs and save into an image array, ensuring grayscale- - - - - - - - - - - - - - - - - - - - - - - - - - - #
 image_array = []
@@ -50,6 +51,7 @@ image_patient_number = []
 image_time_frame = []
 image_dominant_hand = []
 image_treated_hand = []
+image_PD_hand = []
 file_count = 0
 
 def get_time_period(image_name): 
@@ -115,6 +117,8 @@ def is_treated_hand(image_name, patient_number):
             left_position = image_name.find("left")
             if left_position == -1:
                 return False
+            else:
+                return True
         else:
             return True
     else: 
@@ -123,6 +127,8 @@ def is_treated_hand(image_name, patient_number):
             right_position = image_name.find("right")
             if right_position == -1: 
                 return False
+            else:
+                return True
         else:
             return True
 
@@ -135,6 +141,8 @@ def is_dominant_hand(image_name, patient_number):
             left_position = image_name.find("left")
             if left_position == -1:
                 return False
+            else:
+                return True
         else:
             return True
     else: 
@@ -143,8 +151,16 @@ def is_dominant_hand(image_name, patient_number):
             right_position = image_name.find("right")
             if right_position == -1: 
                 return False
+            else:
+                return True
         else:
             return True
+
+def is_PD_hand(patient_number):
+    if patient_number == 3 or patient_number == 4 or patient_number == 7 or patient_number == 8 or patient_number == 16 or patient_number == 18 or patient_number == 28 or patient_number == 31 or patient_number == 33 or patient_number == 37 or patient_number == 38 or patient_number == 39 or patient_number == 40 or patient_number == 43 or patient_number == 44 or patient_number == 47 or patient_number == 48 or patient_number == 55 or patient_number == 56 or patient_number == 57 or patient_number == 59 or patient_number == 63 or patient_number == 68 or patient_number == 70 or patient_number == 71 or patient_number == 76 or patient_number == 77 or patient_number == 92 or patient_number == 100 or patient_number == 112 or patient_number == 113 or patient_number == 114 or patient_number == 120 or patient_number == 124:
+        return True
+    else:
+        return False
 
 for outer_foldername in glob.glob('Data\Cropped\*'):
     for foldername in glob.glob(outer_foldername + '\*'):
@@ -158,6 +174,7 @@ for outer_foldername in glob.glob('Data\Cropped\*'):
             time_period = get_time_period(arrayName)
             is_dominant = is_dominant_hand(arrayName, patient_number)
             is_treated = is_treated_hand(arrayName, patient_number)
+            is_PD = is_PD_hand(patient_number)
             if time_period != -1:
                 im = Image.open(filename).convert('L') # convert image to grayscale
                 res = im.point((lambda p: 256 if p>=200 else 0)) # convert each pixel into either black or white
@@ -170,6 +187,7 @@ for outer_foldername in glob.glob('Data\Cropped\*'):
                 image_time_frame.append(time_period)
                 image_dominant_hand.append(is_dominant)
                 image_treated_hand.append(is_treated)
+                image_PD_hand.append(is_PD)
                 file_count = file_count + 1
 
 results_array = [[-1 for x in range(len(Results))] for y in range(file_count)] 
@@ -181,6 +199,8 @@ for image_counter, image in enumerate(image_array):
     results_array[image_counter][Results.TIME_PERIOD.value] = image_time_frame[image_counter]
     results_array[image_counter][Results.DOMINANT_HAND.value] = image_dominant_hand[image_counter]
     results_array[image_counter][Results.TREATED_HAND.value] = image_treated_hand[image_counter]
+    results_array[image_counter][Results.PD_HAND.value] = image_PD_hand[image_counter]
+    print(image_patient_number[image_counter])
 
     coordinates = np.argwhere(image < 0.9)
     try:
@@ -239,7 +259,6 @@ for image_counter, image in enumerate(image_array):
 
         yf_abs = np.abs(yf)
         yf_max = np.max(yf_abs)
-        print(yf_max)
         
         multiplier = 5
         MIN_multiplier = 5
@@ -361,7 +380,7 @@ for image_counter, image in enumerate(image_array):
         results_array[image_counter][Results.AVG_PEAK_DIST.value] = average_peakmin_distance
 
     except:
-        print("ERROR: " + str(image_patient_number[image_counter]) + " - " + str(image_names[image_counter]))
+        print("ERROR: \t" + str(image_patient_number[image_counter]) + "\t -\t " + str(image_names[image_counter]))
 
 # figure_fft = plt.tight_layout()
 # figure_fft = plt.show()
@@ -373,5 +392,5 @@ df = pd.DataFrame(np.array(results_array), columns=table_columns)
 print("- - - - - RESULTS ARRAY - - - - -")
 display(df)
 
-df.to_csv('Area/Result/Results.csv', index=False)
+df.to_csv('Area/Results.csv', index=False)
 # END OF CODE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #

@@ -4,24 +4,26 @@ import numpy as np
 import pandas as pd
 
 # class Results(Enum):
-    # N/A FILENAME = 0
-    # YES PATIENT_NUMBER = 1
-    # YES DOMINANT_HAND = 2
-    # YES TIME_PERIOD = 3
+    # FILENAME = 0
+    # PATIENT_NUMBER = 1
+    # DOMINANT_HAND = 2
+    # TREATED_HAND = 3
+    # TIME_PERIOD = 4
 
-    # YES AREA_TRAPZ = 4
-    # MAX = 5
-    # STDDEV = 6
+    # AREA_TRAPZ = 5
+    # MAX = 6
+    # STDDEV = 7
 
-    # YES AVG_AREA_TRAPZ = 7
-    # AVG_AREA_MAX = 8
-    # YES AVG_AREA_STDDEV = 9
+    # AVG_AREA_TRAPZ = 8
+    # AVG_AREA_MAX = 9
+    # AVG_AREA_STDDEV = 10
 
-    # NUM_PEAKS = 10
-    # AVG_PEAK_DIST = 11
+    # NUM_PEAKS = 11
+    # AVG_PEAK_DIST = 12
 
 patient_number_array = []
 patient_dominant_hand = []
+patient_treated_hand = []
 patient_time_array = []
 
 patient_area_trapz = []
@@ -33,11 +35,12 @@ patient_avg_peak_dist = []
 patient_determinator_1 = []
 patient_determinator_2 = []
 
-with open('Area\Result\Results.csv', 'r') as theFile: 
+with open('Area\Results.csv', 'r') as theFile: 
     reader = csv.DictReader(theFile)
     for line in reader: 
         patient_number_array.append(line['PATIENT_NUMBER'])
         patient_dominant_hand.append(line['DOMINANT_HAND'])
+        patient_treated_hand.append(line['TREATED_HAND'])
         patient_time_array.append(line['TIME_PERIOD'])
 
         patient_area_trapz.append(line['AREA_TRAPZ'])
@@ -65,6 +68,10 @@ for i in range(0, n):
             temp = patient_dominant_hand[j]
             patient_dominant_hand[j] = patient_dominant_hand[j+1]
             patient_dominant_hand[j+1] = temp
+
+            temp = patient_treated_hand[j]
+            patient_treated_hand[j] = patient_treated_hand[j+1]
+            patient_treated_hand[j+1] = temp
 
             temp = patient_time_array[j]
             patient_time_array[j] = patient_time_array[j+1]
@@ -98,53 +105,53 @@ for i in range(0, n):
             patient_determinator_2[j] = patient_determinator_2[j+1]
             patient_determinator_2[j+1] = temp
 
-new1_patient_time_array = patient_time_array.copy()
-new1_patient_determinator_1 = patient_determinator_1.copy()
-new1_patient_num_peaks = patient_num_peaks.copy()
-new1_patient_avg_peak_dist = patient_avg_peak_dist.copy()
-for i in range(0, n):
-    for j in range(0, n-i-1):
-        if new1_patient_determinator_1[j] > new1_patient_determinator_1[j+1]:
-            temp = new1_patient_determinator_1[j]
-            new1_patient_determinator_1[j] = new1_patient_determinator_1[j+1]
-            new1_patient_determinator_1[j+1] = temp
+# new1_patient_time_array = patient_time_array.copy()
+# new1_patient_determinator_1 = patient_determinator_1.copy()
+# new1_patient_num_peaks = patient_num_peaks.copy()
+# new1_patient_avg_peak_dist = patient_avg_peak_dist.copy()
+# for i in range(0, n):
+#     for j in range(0, n-i-1):
+#         if new1_patient_determinator_1[j] > new1_patient_determinator_1[j+1]:
+#             temp = new1_patient_determinator_1[j]
+#             new1_patient_determinator_1[j] = new1_patient_determinator_1[j+1]
+#             new1_patient_determinator_1[j+1] = temp
 
-            temp = new1_patient_time_array[j]
-            new1_patient_time_array[j] = new1_patient_time_array[j+1]
-            new1_patient_time_array[j+1] = temp
+#             temp = new1_patient_time_array[j]
+#             new1_patient_time_array[j] = new1_patient_time_array[j+1]
+#             new1_patient_time_array[j+1] = temp
 
-            temp = new1_patient_num_peaks[j]
-            new1_patient_num_peaks[j] = new1_patient_num_peaks[j+1]
-            new1_patient_num_peaks[j+1] = temp
+#             temp = new1_patient_num_peaks[j]
+#             new1_patient_num_peaks[j] = new1_patient_num_peaks[j+1]
+#             new1_patient_num_peaks[j+1] = temp
 
-            temp = new1_patient_avg_peak_dist[j]
-            new1_patient_avg_peak_dist[j] = new1_patient_avg_peak_dist[j+1]
-            new1_patient_avg_peak_dist[j+1] = temp
+#             temp = new1_patient_avg_peak_dist[j]
+#             new1_patient_avg_peak_dist[j] = new1_patient_avg_peak_dist[j+1]
+#             new1_patient_avg_peak_dist[j+1] = temp
 
-new2_patient_time_array = patient_time_array.copy()
-new2_patient_determinator_2 = patient_determinator_2.copy()
-new2_patient_num_peaks = patient_num_peaks.copy()
-new2_patient_avg_peak_dist = patient_avg_peak_dist.copy()
+# new2_patient_time_array = patient_time_array.copy()
+# new2_patient_determinator_2 = patient_determinator_2.copy()
+# new2_patient_num_peaks = patient_num_peaks.copy()
+# new2_patient_avg_peak_dist = patient_avg_peak_dist.copy()
 
-for i in range(0, n):
-    for j in range(0, n-i-1):
-        if new2_patient_determinator_2[j] > new2_patient_determinator_2[j+1]:
+# for i in range(0, n):
+#     for j in range(0, n-i-1):
+#         if new2_patient_determinator_2[j] > new2_patient_determinator_2[j+1]:
 
-            temp = new2_patient_determinator_2[j]
-            new2_patient_determinator_2[j] = new2_patient_determinator_2[j+1]
-            new2_patient_determinator_2[j+1] = temp
+#             temp = new2_patient_determinator_2[j]
+#             new2_patient_determinator_2[j] = new2_patient_determinator_2[j+1]
+#             new2_patient_determinator_2[j+1] = temp
 
-            temp = new2_patient_time_array[j]
-            new2_patient_time_array[j] = new2_patient_time_array[j+1]
-            new2_patient_time_array[j+1] = temp
+#             temp = new2_patient_time_array[j]
+#             new2_patient_time_array[j] = new2_patient_time_array[j+1]
+#             new2_patient_time_array[j+1] = temp
 
-            temp = new2_patient_num_peaks[j]
-            new2_patient_num_peaks[j] = new2_patient_num_peaks[j+1]
-            new2_patient_num_peaks[j+1] = temp
+#             temp = new2_patient_num_peaks[j]
+#             new2_patient_num_peaks[j] = new2_patient_num_peaks[j+1]
+#             new2_patient_num_peaks[j+1] = temp
 
-            temp = new2_patient_avg_peak_dist[j]
-            new2_patient_avg_peak_dist[j] = new2_patient_avg_peak_dist[j+1]
-            new2_patient_avg_peak_dist[j+1] = temp
+#             temp = new2_patient_avg_peak_dist[j]
+#             new2_patient_avg_peak_dist[j] = new2_patient_avg_peak_dist[j+1]
+#             new2_patient_avg_peak_dist[j+1] = temp
 
 ### THE BELOW CODE WORKS BUT ALSO LIKE WTF IT'S SO LONG
 D_patient_number_array = []
@@ -205,7 +212,7 @@ for i in range(0, n):
     if float(patient_avg_std_dev_array[i]) < float(min_std_dev) and float(patient_avg_std_dev_array[i]) >= float(0.0):
         min_std_dev = patient_avg_std_dev_array[i]
 
-    if patient_dominant_hand[i] == 'True':
+    if patient_treated_hand[i] == 'True':
         if int(patient_number_array[i]) != int(D_patient_number_array[D_patient_counter]):
             D_patient_number_array.append(patient_number_array[i])
             D_patient_counter = D_patient_counter + 1 
@@ -279,7 +286,6 @@ ND_data = {'Patient': ND_patient_number_array, 'Before' : ND_time_before, '1 Wee
 ND_df = pd.DataFrame(ND_data)
 ND_df.to_csv('RESULTS/ND_AvgStdDev.csv', index=False)
 
-
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -332,7 +338,6 @@ ND_time_2Y.append(0)
 ND_time_3Y.append(0)
 ND_time_4Y.append(0)
 
-
 max_area = 0.0
 min_area = 100.0
 
@@ -343,7 +348,7 @@ for i in range(0, n):
     if float(patient_avg_area_trapz[i]) < float(min_area) and float(patient_avg_area_trapz[i]) >= float(0.0):
         min_area = patient_avg_area_trapz[i]
 
-    if patient_dominant_hand[i] == 'True':
+    if patient_treated_hand[i] == 'True':
         if int(patient_number_array[i]) != int(D_patient_number_array[D_patient_counter]):
             D_patient_number_array.append(patient_number_array[i])
             D_patient_counter = D_patient_counter + 1 
@@ -644,13 +649,13 @@ plt.rcParams.update({'font.size': 12})
 x = ['1W', '1M', '3M', '6M', '1Y', '2Y', '3Y', '4Y']
 x_axis = np.arange(len(x))
 fig, ax1 = plt.subplots(figsize = (8,4))
-plt.title('Percentage of Patients with Tremor Before Treatment that Improved \nAfter Various Treatment Times')
+plt.title('Percentage of Patients with Tremor Before Treatment that Improved\nAfter Various Treatment Times')
 plt.grid(linestyle = '-', linewidth=0.5, axis='y')
 
-ax1.bar(x_axis - 0.15, D_improved_percentage, 0.3, label = 'Dominant Hand', color = 'darkblue')
-ax1.bar(x_axis + 0.15, ND_improved_percentage, 0.3, label = 'Dominant Hand', color = 'cornflowerblue')
+ax1.bar(x_axis - 0.15, D_improved_percentage, 0.3, label = 'Treated Hand', color = 'darkblue')
+ax1.bar(x_axis + 0.15, ND_improved_percentage, 0.3, label = 'Treated Hand', color = 'cornflowerblue')
 ax1.set_ylabel('Percentage of patients that improved')
-ax1.legend(['Dominant Hand', 'Non-Dominant Hand'], loc="upper right")
+ax1.legend(['Treated Hand', 'Non-Treated Hand'], loc="upper right")
 ax1.set_ylim(0, 100)
 ax2 = ax1.twinx()
 ax2.plot(x, avg_total_num, color = 'red')
@@ -662,19 +667,19 @@ ax2.set_ylim(0, 100)
 ## GRAPH 2: PERCENTAGE OF PATIENTS WITH TREMOR BEFORE TREATMENT THAT IMPROVED AFTER VARIOUS TREATMENT TIMES
 fig, ax1 = plt.subplots(figsize = (8,4))
 plt.grid(linestyle = '-', linewidth=0.5, axis='y')
-plt.title('Difference Between Tremor Severity Before Treatment and After Various Treatment Periods')
+plt.title('Difference Between Tremor Severity Before Treatment\nand After Various Treatment Periods')
 
-ax1.bar(x_axis - 0.15, D_avg_diff_improved, 0.3, label = 'Dominant Hand', color = 'darkblue')
-ax1.bar(x_axis + 0.15, ND_avg_diff_improved, 0.3, label = 'Dominant Hand', color = 'cornflowerblue')
+ax1.bar(x_axis - 0.15, D_avg_diff, 0.3, label = 'Treated Hand', color = 'darkblue')
+ax1.bar(x_axis + 0.15, ND_avg_diff, 0.3, label = 'Treated Hand', color = 'cornflowerblue')
 ax1.set_ylabel('Difference in Tremor')
-ax1.legend(['Dominant Hand', 'Non-Dominant Hand'], loc="upper right")
+ax1.legend(['Treated Hand', 'Non-Treated Hand'], loc="upper right")
 # ax1.set_ylim(0, 100)
-ax2 = ax1.twinx()
-ax2.plot(x, D_num_improved, color = 'red')
-ax2.plot(x, ND_num_improved, color = 'green')
-ax2.set_ylabel('Number of patients total')
-ax2.legend(['Dominant Hand', 'Non-Dominant Hand'], loc="upper center")
-ax2.set_ylim(0, 100)
+# ax2 = ax1.twinx()
+# ax2.plot(x, D_num_improved, color = 'red')
+# ax2.plot(x, ND_num_improved, color = 'green')
+# ax2.set_ylabel('Number of patients total')
+# ax2.legend(['Treated Hand', 'Non-Treated Hand'], loc="upper center")
+# ax2.set_ylim(0, 100)
 plt.xticks(x_axis, x)
 plt.show()
 ## GRAPH: PERCENTAGE OF PATIENTS WITH TREMOR BEFORE TREATMENT THAT IMPROVED AFTER VARIOUS TREATMENT TIMES
@@ -713,11 +718,11 @@ plt.show()
 # x = ['1W', '1M', '3M', '6M', '1Y', '2Y', '3Y', '4Y']
 # x_axis = np.arange(len(x))
 
-# # plt.bar(x_axis - 0.15, D_improved_percentage, 0.3, label = 'Dominant Hand', color = 'darkblue')
-# # plt.bar(x_axis + 0.15, ND_improved_percentage, 0.3, label = 'Non-Dominant Hand', color = 'cornflowerblue')
+# # plt.bar(x_axis - 0.15, D_improved_percentage, 0.3, label = 'Treated Hand', color = 'darkblue')
+# # plt.bar(x_axis + 0.15, ND_improved_percentage, 0.3, label = 'Non-Treated Hand', color = 'cornflowerblue')
 
-# plt.bar(x_axis - 0.15, D_num_improved, 0.3, label = 'Dominant Hand', color = 'darkblue')
-# plt.bar(x_axis + 0.15, ND_num_improved, 0.3, label = 'Non-Dominant Hand', color = 'cornflowerblue')
+# plt.bar(x_axis - 0.15, D_num_improved, 0.3, label = 'Treated Hand', color = 'darkblue')
+# plt.bar(x_axis + 0.15, ND_num_improved, 0.3, label = 'Non-Treated Hand', color = 'cornflowerblue')
 
 
 # plt.xticks(x_axis, x)
