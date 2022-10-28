@@ -24,24 +24,24 @@ import pandas as pd
 from IPython.display import display
 from sympy import false
 from scipy import signal
-from scipy.fft import rfft, rfftfreq, fft, fftfreq, irfft, ifft
+from scipy.fft import rfft, rfftfreq, irfft
 class Results(Enum):
     FILENAME = 0
     PATIENT_NUMBER = 1
     DOMINANT_HAND = 2
-    TIME_PERIOD = 3
+    TREATED_HAND = 3
+    TIME_PERIOD = 4
 
-    AREA_TRAPZ = 4
-    MAX = 5
-    STDDEV = 6
+    AREA_TRAPZ = 5
+    MAX = 6
+    STDDEV = 7
 
-    AVG_AREA_TRAPZ = 7
-    AVG_AREA_MAX = 8
-    AVG_AREA_STDDEV = 9
+    AVG_AREA_TRAPZ = 8
+    AVG_AREA_MAX = 9
+    AVG_AREA_STDDEV = 10
 
-    NUM_PEAKS = 10
-    AVG_PEAK_DIST = 11
-
+    NUM_PEAKS = 11
+    AVG_PEAK_DIST = 12
     
 # Read in the .jpgs and save into an image array, ensuring grayscale- - - - - - - - - - - - - - - - - - - - - - - - - - - #
 image_array = []
@@ -49,6 +49,7 @@ image_names = []
 image_patient_number = []
 image_time_frame = []
 image_dominant_hand = []
+image_treated_hand = []
 file_count = 0
 
 def get_time_period(image_name): 
@@ -105,35 +106,58 @@ def get_time_period(image_name):
 
     return -1
 
+def is_treated_hand(image_name, patient_number): 
+    image_name = str.lower(image_name)
+
+    if patient_number == 6 or patient_number == 17 or patient_number == 22 or patient_number == 32 or patient_number == 74 or patient_number == 85 or patient_number == 87 or patient_number == 109 or patient_number == 111 or patient_number == 115 or patient_number == 116  or patient_number == 8 or patient_number == 16 or patient_number == 31 or patient_number == 39 or patient_number == 40 or patient_number == 47 or patient_number == 56 or patient_number == 57 or patient_number == 124:
+        left_position = image_name.find("lt")
+        if left_position == -1:
+            left_position = image_name.find("left")
+            if left_position == -1:
+                return False
+        else:
+            return True
+    else: 
+        right_position = image_name.find("rt")
+        if right_position == -1: 
+            right_position = image_name.find("right")
+            if right_position == -1: 
+                return False
+        else:
+            return True
+
 def is_dominant_hand(image_name, patient_number):
     image_name = str.lower(image_name)
 
     if patient_number == 17 or patient_number == 22 or patient_number == 32 or patient_number == 56 or patient_number == 74 or patient_number == 87 or patient_number == 102 or patient_number == 109 or patient_number == 111 or patient_number == 115 or patient_number == 116 or patient_number == 117:
         left_position = image_name.find("lt")
         if left_position == -1:
-            return False
+            left_position = image_name.find("left")
+            if left_position == -1:
+                return False
         else:
             return True
     else: 
         right_position = image_name.find("rt")
         if right_position == -1: 
-            return False
+            right_position = image_name.find("right")
+            if right_position == -1: 
+                return False
         else:
             return True
 
-# For testing purposes: 
-# counter = 0
 for outer_foldername in glob.glob('Data\Cropped\*'):
     for foldername in glob.glob(outer_foldername + '\*'):
         patient_number = os.path.basename(foldername)
         patient_number = patient_number.replace("#", "")
-        # counter = counter + 1
+
         for filename in glob.glob(foldername + "\DrawingC\Rectangles\*.jpg"):
             arrayName = os.path.basename(filename)
             arrayName = arrayName.replace(".jpg","")
 
             time_period = get_time_period(arrayName)
             is_dominant = is_dominant_hand(arrayName, patient_number)
+            is_treated = is_treated_hand(arrayName, patient_number)
             if time_period != -1:
                 im = Image.open(filename).convert('L') # convert image to grayscale
                 res = im.point((lambda p: 256 if p>=200 else 0)) # convert each pixel into either black or white
@@ -145,15 +169,8 @@ for outer_foldername in glob.glob('Data\Cropped\*'):
                 image_patient_number.append(patient_number)
                 image_time_frame.append(time_period)
                 image_dominant_hand.append(is_dominant)
+                image_treated_hand.append(is_treated)
                 file_count = file_count + 1
-
-    #     if counter >= 1:
-    #         break
-    # if counter >= 1:
-    #     break
-
-# figure_fft = plt.figure(1, figsize = (16,10))
-# figure_fft = plt.title("Title")
 
 results_array = [[-1 for x in range(len(Results))] for y in range(file_count)] 
 
@@ -163,11 +180,11 @@ for image_counter, image in enumerate(image_array):
     results_array[image_counter][Results.PATIENT_NUMBER.value] = image_patient_number[image_counter]
     results_array[image_counter][Results.TIME_PERIOD.value] = image_time_frame[image_counter]
     results_array[image_counter][Results.DOMINANT_HAND.value] = image_dominant_hand[image_counter]
+    results_array[image_counter][Results.TREATED_HAND.value] = image_treated_hand[image_counter]
 
-    # NOTE: The horizontal axis is denoted by y, and the vertical axis is denoted by x 
-    # (No, this was not on purpose. Yes, it's an absolute pain.)
     coordinates = np.argwhere(image < 0.9)
     try:
+        # NOTE: The horizontal axis is denoted by y, and the vertical axis is denoted by x - No, this was not on purpose. Yes, it's an absolute pain.
         x_tuple, y_tuple, z_tuple = zip(*coordinates)
 
         x = np.array(x_tuple).tolist()
@@ -223,7 +240,6 @@ for image_counter, image in enumerate(image_array):
         yf_abs = np.abs(yf)
         yf_max = np.max(yf_abs)
         print(yf_max)
-
         
         multiplier = 5
         MIN_multiplier = 5
@@ -242,7 +258,6 @@ for image_counter, image in enumerate(image_array):
 
             multiplier = multiplier+5
 
-
         if len(new_array_y) > len(new_f_clean):
             new_new_array_y = new_array_y
             new_new_array_y.pop(0)
@@ -251,10 +266,8 @@ for image_counter, image in enumerate(image_array):
         #     figure_fft = plt.plot(new_array_y, new_f_clean)
 
         # EXTRACTING OF NUMERICAL DATA FROM THE ABOVE GRAPH - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
-        # Area under the curve, using numpy's trapz formula
-        total_area_trapz_x = trapz(new_array_x_ABS)
+        total_area_trapz_x = trapz(new_array_x_ABS) # Area under the curve, using numpy's trapz formula
         # figure_fft = plt.text(100, 10, "Abs Area: " + str(round(total_area_trapz_x, 2)), bbox=dict(facecolor='beige', alpha=0.5))
-
         # figure_fft = plt.xlim(0, 600)
         # figure_fft = plt.ylim(-20, 20)
         
@@ -263,12 +276,8 @@ for image_counter, image in enumerate(image_array):
         iqr = q3-q1
         std = np.std(new_array_x)
 
-
-
-
         x_peaks = signal.find_peaks(np.array(new_f_clean))
         num_peaks = len(x_peaks[0])
-        # print("NUM PEAKS: " + str(num_peaks))
         # figure_fft = plt.text(300, 10, "NUM PEAKS: " + str(num_peaks), bbox=dict(facecolor='beige', alpha=0.5))
 
         y_peaks_points = []
@@ -277,12 +286,10 @@ for image_counter, image in enumerate(image_array):
         for p in x_peaks[0]:
             x_peaks_points.append(new_f_clean[p])
             y_peaks_points.append(new_array_y[p])
-
         # figure_fft = plt.plot(y_peaks_points, x_peaks_points, marker="x", linestyle="None", color='purple')
 
         MIN_x_peaks = signal.find_peaks(np.array(-new_f_clean))
         MIN_num_peaks = len(MIN_x_peaks[0])
-        
         # figure_fft = plt.text(500, 10, "NUM MIN PEAKS: " + str(MIN_num_peaks), bbox=dict(facecolor='beige', alpha=0.5))
 
         MIN_y_peaks_points = []
@@ -290,7 +297,6 @@ for image_counter, image in enumerate(image_array):
         for p in MIN_x_peaks[0]:
             MIN_x_peaks_points.append(new_f_clean[p])
             MIN_y_peaks_points.append(new_array_y[p])
-
         # figure_fft = plt.plot(MIN_y_peaks_points, MIN_x_peaks_points, marker="x", linestyle="None", color='green')
 
         peakmin_distance_array = []
@@ -310,12 +316,6 @@ for image_counter, image in enumerate(image_array):
         # figure_fft = plt.text(100, -10, "Avg Peak Distance: " + str(round(average_peakmin_distance, 2)), bbox=dict(facecolor='beige', alpha=0.5))
         # figure_fft = plt.text(300, -10, "NEW 1: " + str(round(average_peakmin_distance/num_peaks, 2)), bbox=dict(facecolor='beige', alpha=0.5))
         # figure_fft = plt.text(500, -10, "NEW 2: " + str(round(average_peakmin_distance*num_peaks, 2)), bbox=dict(facecolor='beige', alpha=0.5))
-
-
-
-
-
-
 
         results_array[image_counter][Results.AREA_TRAPZ.value] = total_area_trapz_x
         results_array[image_counter][Results.MAX.value] = max
@@ -366,7 +366,6 @@ for image_counter, image in enumerate(image_array):
 # figure_fft = plt.tight_layout()
 # figure_fft = plt.show()
 
-
 table_columns = []
 for r in Results:
     table_columns.append(str(r.name))
@@ -376,5 +375,3 @@ display(df)
 
 df.to_csv('Area/Result/Results.csv', index=False)
 # END OF CODE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
-
-
