@@ -247,8 +247,9 @@ for image_counter, image in enumerate(image_array):
         # # figure_fft = plt.fill_between(new_array_y, new_array_x, color="grey")
         # figure_fft = plt.plot(new_array_y, new_array_x)
 
-        sos = signal.iirfilter(4, Wn=[0.1, 2.5], fs=30, btype="bandpass", ftype="butter", output="sos")
-        yfilt = signal.sosfilt(sos, new_array_x)
+        # THIS IS NOT USED:
+        # sos = signal.iirfilter(4, Wn=[0.1, 2.5], fs=30, btype="bandpass", ftype="butter", output="sos")
+        # yfilt = signal.sosfilt(sos, new_array_x)
 
         data_step = 0.1
         n = len(new_array_y)
