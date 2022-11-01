@@ -568,8 +568,8 @@ for i in range(0, n):
         elif patient_time_array[i] == "4Y":
             ND_time_4Y_det_2[ND_patient_counter_det_2] = patient_determinator_2[i]
                 
-print(max_det_2)
-print(min_det_2)
+# print(max_det_2)
+# print(min_det_2)
 
 D_data_det_2 = {'Patient': D_patient_number_array_det_2, 'Before' : D_time_before_det_2, '1 Week' : D_time_1W_det_2, '1 Month' : D_time_1M_det_2, '3 Months': D_time_3M_det_2, '6 Months': D_time_6M_det_2, '1 Year': D_time_1Y_det_2, '2 Years': D_time_2Y_det_2, '3 Years':D_time_3Y_det_2, '4 Years':D_time_4Y_det_2 }
 D_df_det_2 = pd.DataFrame(D_data_det_2)
@@ -646,31 +646,35 @@ avg_total_num = [(D_both_1W+ND_both_1W)/2, (D_both_1M+ND_both_1M)/2, (D_both_3M+
 
 
 
-print("3Y: " + str(ND_avg_diff_3Y))
+# print("3Y: " + str(ND_avg_diff_3Y))
 
 ## GENERAL GRAPH SETTINGS
 plt.rcParams["font.family"] = "Times New Roman"
 plt.rc('axes', axisbelow=True)
-plt.rcParams.update({'font.size': 12})
+plt.rcParams.update({'font.size': 16})
 
 ## GRAPH 1: PERCENTAGE OF PATIENTS WITH TREMOR BEFORE TREATMENT THAT IMPROVED AFTER VARIOUS TREATMENT TIMES
 x = ['1W', '1M', '3M', '6M', '1Y', '2Y', '3Y', '4Y']
 x_axis = np.arange(len(x))
 fig, ax1 = plt.subplots(figsize = (8,4))
-plt.title('Percentage of Patients with Tremor Before Treatment that Improved\nAfter Various Treatment Times (METHOD 2)')
+plt.title('Percentage of Patients with Tremor Before Treatment that Improved\nAfter Various Treatment Times')
 plt.grid(linestyle = '-', linewidth=0.5, axis='y')
+plt.tight_layout()
 
 ax1.bar(x_axis - 0.15, D_improved_percentage, 0.3, label = 'Treated Hand', color = 'darkblue')
 ax1.bar(x_axis + 0.15, ND_improved_percentage, 0.3, label = 'Treated Hand', color = 'cornflowerblue')
 ax1.set_ylabel('Percentage Improved')
 ax1.set_xlabel('Time')
-ax1.legend(['Treated Hand', 'Untreated Hand'], loc="upper right")
+ax1.legend(['Treated Hand', 'Untreated Hand'], loc="upper right", prop={'size': 14})
 ax1.set_ylim(0, 100)
 ax2 = ax1.twinx()
 ax2.plot(x, avg_total_num, color = 'red')
 ax2.set_ylabel('Number of Patients')
-ax2.legend(['Number of patients'], loc="upper center")
+ax2.legend(['Number of\npatients'], loc="upper center", prop={'size': 14})
 ax2.set_ylim(0, 100)
+plt.rcParams["figure.figsize"] = (8,4)
+print("AVERAGE: " + str(np.average(D_improved_percentage)))
+plt.savefig('RESULTS\GRAPHS\PercentageOfPatients.png', bbox_inches='tight', dpi=150)
 ## GRAPH 1: PERCENTAGE OF PATIENTS WITH TREMOR BEFORE TREATMENT THAT IMPROVED AFTER VARIOUS TREATMENT TIMES
 
 ## GRAPH 2: PERCENTAGE OF PATIENTS WITH TREMOR BEFORE TREATMENT THAT IMPROVED AFTER VARIOUS TREATMENT TIMES
@@ -692,6 +696,8 @@ ax1.set_xlabel('Time')
 # ax2.legend(['Treated Hand', 'Non-Treated Hand'], loc="upper center")
 # ax2.set_ylim(0, 100)
 plt.xticks(x_axis, x)
+plt.tight_layout()
+
 plt.show()
 
 ## GRAPH: PERCENTAGE OF PATIENTS WITH TREMOR BEFORE TREATMENT THAT IMPROVED AFTER VARIOUS TREATMENT TIMES
@@ -878,7 +884,7 @@ for i in range(0, longest_array):
         ND_gradient, ND_intercept = np.polyfit(ND_x_array, ND_y_array, 1)
 
         
-        print(str(D_patient_number_array_det_2[D_counter]) + "\t" + str(i) + " - D_counter: " + str(D_counter) + "\tD: " + str(D_gradient) + "\tND_counter: " + str(ND_counter) + "\tND: " + str(ND_gradient))
+        # print(str(D_patient_number_array_det_2[D_counter]) + "\t" + str(i) + " - D_counter: " + str(D_counter) + "\tD: " + str(D_gradient) + "\tND_counter: " + str(ND_counter) + "\tND: " + str(ND_gradient))
 
         plt.title('Results of Patients\' Most Improved Hand')
         plt.grid(linestyle = '-', linewidth=0.5, axis='y')
@@ -942,6 +948,7 @@ for i in range(0, longest_array):
         # ax2_ALLPATIENTS.legend(['Number of patients'], loc="upper center")
         # ax2_ALLPATIENTS.set_ylim(0, 100)
 
+plt.tight_layout()
 
 plt.show()
 
@@ -1098,7 +1105,7 @@ for i in range(0, longest_array):
         ND_gradient, ND_intercept = np.polyfit(ND_x_array, ND_y_array, 1)
 
         
-        print(str(D_patient_number_array_det_2[D_counter]) + "\t" + str(i) + " - D_counter: " + str(D_counter) + "\tD: " + str(D_gradient) + "\tND_counter: " + str(ND_counter) + "\tND: " + str(ND_gradient))
+        # print(str(D_patient_number_array_det_2[D_counter]) + "\t" + str(i) + " - D_counter: " + str(D_counter) + "\tD: " + str(D_gradient) + "\tND_counter: " + str(ND_counter) + "\tND: " + str(ND_gradient))
 
 
         temp_D_y_array = np.array(D_y_array.copy())
@@ -1141,6 +1148,7 @@ for i in range(0, longest_array):
                     which_hand.append('TREATED')
                 else:
                     which_hand.append('NON-TREATED')
+plt.tight_layout()
 
 plt.show()
 
@@ -1149,7 +1157,7 @@ plt.show()
 
 x_array = [1,2,3,4,5,6,7,8,9]
 fig_ALLPATIENTS3, ax1_ALLPATIENTS3 = plt.subplots(figsize = (8,4))
-plt.title('Average Tremor Severities for Each Hand (METHOD 2)')
+plt.title('Average Tremor Severities for Each Hand')
 plt.grid(linestyle = '-', linewidth=0.5, axis='y')
 plt.xticks(x_array, ['Before', '1W', '1M', '3M', '6M', '1Y', '2Y', '3Y', '4Y'])
 
@@ -1182,6 +1190,7 @@ ax1_ALLPATIENTS3.plot(x_array, ND_averages, color = 'cornflowerblue')
 ax1_ALLPATIENTS3.set_ylabel('Tremor Severity')
 ax1_ALLPATIENTS3.set_xlabel('Time')
 ax1_ALLPATIENTS3.legend(['Treated Hand', 'Untreated Hand'], loc="upper right")
+plt.tight_layout()
 
 plt.show()
 
@@ -1200,14 +1209,14 @@ plt.show()
 
 x_array = [1,2,3,4,5,6,7,8,9]
 fig_ALLPATIENTS4, ax1_ALLPATIENTS4 = plt.subplots(figsize = (8,4))
-plt.title('Average Tremor Severities for Each Hand (METHOD 2)')
+plt.title('Average Tremor Severities for Each Hand')
 plt.grid(linestyle = '-', linewidth=0.5, axis='y')
 plt.xticks(x_array, ['Before', '1W', '1M', '3M', '6M', '1Y', '2Y', '3Y', '4Y'])
 
 all_arrays = [*D_time_before_det_2, *D_time_1W_det_2, *D_time_1M_det_2, *D_time_3M_det_2, *D_time_6M_det_2, *D_time_1Y_det_2, *D_time_2Y_det_2, *D_time_3Y_det_2, *D_time_4Y_det_2, *ND_time_before_det_2, *ND_time_1W_det_2, *ND_time_1M_det_2, *ND_time_3M_det_2, *ND_time_6M_det_2, *ND_time_1Y_det_2, *ND_time_2Y_det_2, *ND_time_3Y_det_2, *ND_time_4Y_det_2]
 # all_max_array = [max(D_time_before_det_2), max(D_time_1W_det_2), max(D_time_1M_det_2), max(D_time_3M_det_2), max(D_time_6M_det_2), max(D_time_1Y_det_2), max(D_time_2Y_det_2), max(D_time_3Y_det_2), max(D_time_4Y_det_2), max(*ND_time_before_det_2), max(*ND_time_1W_det_2), max(*ND_time_1M_det_2), max(ND_time_3M_det_2), max(ND_time_6M_det_2), max(ND_time_1Y_det_2), max(ND_time_2Y_det_2), max(ND_time_3Y_det_2), max(ND_time_4Y_det_2)]
-all_min, q10, q90, all_max = np.quantile(all_arrays, [0, 0.1, 0.9, 1])
-denom = q90 - all_min
+all_min, q10, q90, q95, q98, q999, all_max = np.quantile(all_arrays, [0, 0.1, 0.9, 0.95, 0.98, 0.99, 1])
+denom = q95 - all_min
 
 
 # (x-min)/(max-min)
@@ -1262,7 +1271,8 @@ ax1_ALLPATIENTS4.plot(x_array, D_averages, color = 'darkblue')
 ax1_ALLPATIENTS4.plot(x_array, ND_averages, color = 'cornflowerblue')
 ax1_ALLPATIENTS4.set_ylabel('Tremor Severity')
 ax1_ALLPATIENTS4.set_xlabel('Time')
-ax1_ALLPATIENTS4.legend(['Treated Hand', 'Untreated Hand'], loc="upper right")
+ax1_ALLPATIENTS4.legend(['Treated Hand', 'Untreated Hand'], loc="upper right", prop={'size': 14})
+plt.savefig('RESULTS\GRAPHS\AverageTremSev.png', bbox_inches='tight', dpi=150)
 
 plt.show()
 
