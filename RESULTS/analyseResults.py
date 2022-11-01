@@ -1204,11 +1204,10 @@ plt.title('Average Tremor Severities for Each Hand (METHOD 2)')
 plt.grid(linestyle = '-', linewidth=0.5, axis='y')
 plt.xticks(x_array, ['Before', '1W', '1M', '3M', '6M', '1Y', '2Y', '3Y', '4Y'])
 
-all_max_array = [max(D_time_before_det_2), max(D_time_1W_det_2), max(D_time_1M_det_2), max(D_time_3M_det_2), max(D_time_6M_det_2), max(D_time_1Y_det_2), max(D_time_2Y_det_2), max(D_time_3Y_det_2), max(D_time_4Y_det_2), max(ND_time_before_det_2), max(ND_time_1W_det_2), max(ND_time_1M_det_2), max(ND_time_3M_det_2), max(ND_time_6M_det_2), max(ND_time_1Y_det_2), max(ND_time_2Y_det_2), max(ND_time_3Y_det_2), max(ND_time_4Y_det_2)]
-all_max = max(all_max_array)
-all_min_array = [min(D_time_before_det_2), min(D_time_1W_det_2), min(D_time_1M_det_2), min(D_time_3M_det_2), min(D_time_6M_det_2), min(D_time_1Y_det_2), min(D_time_2Y_det_2), min(D_time_3Y_det_2), min(D_time_4Y_det_2), min(ND_time_before_det_2), min(ND_time_1W_det_2), min(ND_time_1M_det_2), min(ND_time_3M_det_2), min(ND_time_6M_det_2), min(ND_time_1Y_det_2), min(ND_time_2Y_det_2), min(ND_time_3Y_det_2), min(ND_time_4Y_det_2)]
-all_min = min(all_min_array)
-denom = all_max - all_min
+all_arrays = [*D_time_before_det_2, *D_time_1W_det_2, *D_time_1M_det_2, *D_time_3M_det_2, *D_time_6M_det_2, *D_time_1Y_det_2, *D_time_2Y_det_2, *D_time_3Y_det_2, *D_time_4Y_det_2, *ND_time_before_det_2, *ND_time_1W_det_2, *ND_time_1M_det_2, *ND_time_3M_det_2, *ND_time_6M_det_2, *ND_time_1Y_det_2, *ND_time_2Y_det_2, *ND_time_3Y_det_2, *ND_time_4Y_det_2]
+# all_max_array = [max(D_time_before_det_2), max(D_time_1W_det_2), max(D_time_1M_det_2), max(D_time_3M_det_2), max(D_time_6M_det_2), max(D_time_1Y_det_2), max(D_time_2Y_det_2), max(D_time_3Y_det_2), max(D_time_4Y_det_2), max(*ND_time_before_det_2), max(*ND_time_1W_det_2), max(*ND_time_1M_det_2), max(ND_time_3M_det_2), max(ND_time_6M_det_2), max(ND_time_1Y_det_2), max(ND_time_2Y_det_2), max(ND_time_3Y_det_2), max(ND_time_4Y_det_2)]
+all_min, q10, q90, all_max = np.quantile(all_arrays, [0, 0.1, 0.9, 1])
+denom = q90 - all_min
 
 
 # (x-min)/(max-min)
