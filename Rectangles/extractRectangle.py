@@ -1,6 +1,6 @@
 # EIE Investigation: "Which Hand?"
 # Jesse van der Merwe (1829172) and Robyn Gebbie (2127777)
-# ELEN4012A 2022
+# ELEN4012A NOVEMBER 2022
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
 # COPYRIGHT NOTICE: 

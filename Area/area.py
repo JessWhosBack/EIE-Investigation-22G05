@@ -1,14 +1,6 @@
 # EIE Investigation: "Which Hand?"
 # Jesse van der Merwe (1829172) and Robyn Gebbie (2127777)
-# ELEN4012A 2022
-
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
-# COPYRIGHT NOTICE: 
-# This code contains snippets from XX article "XX" (XX/XX/XXXX) 
-# Which can be found at: https://X
-# 
-# It has further been modified and combined to suit the needs of this project.
-# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+# ELEN4012A NOVEMBER 2022
 
 # IMPORTS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
 import cv2
@@ -25,6 +17,7 @@ from IPython.display import display
 from sympy import false
 from scipy import signal
 from scipy.fft import rfft, rfftfreq, irfft
+
 class Results(Enum):
     FILENAME = 0
     PATIENT_NUMBER = 1
@@ -32,15 +25,12 @@ class Results(Enum):
     TREATED_HAND = 3
     TIME_PERIOD = 4
     PD_HAND = 5
-
     AREA_TRAPZ = 6
     MAX = 7
     STDDEV = 8
-
     AVG_AREA_TRAPZ = 9
     AVG_AREA_MAX = 10
     AVG_AREA_STDDEV = 11
-
     NUM_PEAKS = 12
     AVG_PEAK_DIST = 13
     
@@ -56,7 +46,6 @@ file_count = 0
 
 def get_time_period(image_name): 
     image_name = str.lower(image_name)
-    print(image_name)
 
     if image_name.find("w") != -1: 
         period = image_name[0:image_name.find("w")]
@@ -66,7 +55,6 @@ def get_time_period(image_name):
             output = "1W"
         else: 
             output = str(time[0]) + "W"
-        print(output)
         return output
 
     if image_name.find("m") != -1:
@@ -80,10 +68,10 @@ def get_time_period(image_name):
         else:
             try:
                 output = str(time[0]) + "M"
-                print(output)
                 return output
             except:
-                print("ERROR")
+                pass # Presentation purposes, delete later
+                # print("ERROR - m but no time")
 
 
     if image_name.find("y") != -1:
@@ -92,18 +80,16 @@ def get_time_period(image_name):
 
         if period.find("one") != -1:
             output = "1Y"
-            print(output)
             return output
         else: 
             try:
                 output = str(time[0]) + "Y"
-                print(output)
                 return output
             except:
-                print("ERROR")
+                pass # Presentation purposes, delete later
+                # print("ERROR - y but no time - " + str(image_name))
 
     if image_name.find("before") != -1: 
-        print("before")
         return "before"
 
     return -1
@@ -192,206 +178,212 @@ for outer_foldername in glob.glob('Data\Cropped\*'):
 
 results_array = [[-1 for x in range(len(Results))] for y in range(file_count)] 
 
+temp_counter_patient_5 = -1
 # Loop through the image array to perform image processing- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
 for image_counter, image in enumerate(image_array):
-    results_array[image_counter][Results.FILENAME.value] = image_names[image_counter]
-    results_array[image_counter][Results.PATIENT_NUMBER.value] = image_patient_number[image_counter]
-    results_array[image_counter][Results.TIME_PERIOD.value] = image_time_frame[image_counter]
-    results_array[image_counter][Results.DOMINANT_HAND.value] = image_dominant_hand[image_counter]
-    results_array[image_counter][Results.TREATED_HAND.value] = image_treated_hand[image_counter]
-    results_array[image_counter][Results.PD_HAND.value] = image_PD_hand[image_counter]
-    print(image_patient_number[image_counter])
+    if image_patient_number[image_counter] == "5": # DELETE THIS - TESTING PURPOSES
+        temp_counter_patient_5 += 1
+        temp_title = image_names[image_counter].replace("(5)_C__RECT", "")
 
-    coordinates = np.argwhere(image < 0.9)
-    try:
-        # NOTE: The horizontal axis is denoted by y, and the vertical axis is denoted by x - No, this was not on purpose. Yes, it's an absolute pain.
-        x_tuple, y_tuple, z_tuple = zip(*coordinates)
+        results_array[image_counter][Results.FILENAME.value] = image_names[image_counter]
+        results_array[image_counter][Results.PATIENT_NUMBER.value] = image_patient_number[image_counter]
+        results_array[image_counter][Results.TIME_PERIOD.value] = image_time_frame[image_counter]
+        results_array[image_counter][Results.DOMINANT_HAND.value] = image_dominant_hand[image_counter]
+        results_array[image_counter][Results.TREATED_HAND.value] = image_treated_hand[image_counter]
+        results_array[image_counter][Results.PD_HAND.value] = image_PD_hand[image_counter]
 
-        x = np.array(x_tuple).tolist()
-        y = np.array(y_tuple).tolist()
-        z = np.array(z_tuple).tolist()
+        coordinates = np.argwhere(image < 0.9)
+        fig, (axs_original, axs_fft, axs_ifft, axs_area) = plt.subplots(4)
 
-        average_x = np.mean(x)  
-        new_array_x = []
-        new_array_x_ABS = []
-        new_array_y = []
-        
-        # Sort the array of pixels into an ordered array according to the horizontal x-axis
-        for i in range(0, len(y)-1):
-            for j in range(0, len(y)-i-1):
-                if y[j] > y[j+1]:
-                    temp_x = x[j]
-                    x[j] = x[j+1]
-                    x[j+1] = temp_x
+        try:
+            # NOTE: The horizontal axis is denoted by y, and the vertical axis is denoted by x - No, this was not on purpose. Yes, it's an absolute pain.
+            x_tuple, y_tuple, z_tuple = zip(*coordinates)
 
-                    temp_y = y[j]
-                    y[j] = y[j+1]
-                    y[j+1] = temp_y
+            x = np.array(x_tuple).tolist()
+            y = np.array(y_tuple).tolist()
+            z = np.array(z_tuple).tolist()
+           
+            # Sort the array of pixels into an ordered array according to the horizontal x-axis
+            for i in range(0, len(y)-1):
+                for j in range(0, len(y)-i-1):
+                    if y[j] > y[j+1]:
+                        temp_x = x[j]
+                        x[j] = x[j+1]
+                        x[j+1] = temp_x
 
-        # Take the absolute value and shift the points down to be centered around the horizontal axis
-        for i in range(0, len(x)):
-            new_array_y.append(y[i])
-            new_array_x.append(x[i]-average_x)
-            
-            # Use the below code to shift the points down to be centered around the horizontal axis AND be the absolute version of the graph
-            if x[i] < average_x: 
-                c = 3
-                new_array_x_ABS.append(average_x - x[i])
-            else:
-                new_array_x_ABS.append(x[i] - average_x)
+                        temp_y = y[j]
+                        y[j] = y[j+1]
+                        y[j+1] = temp_y
 
-        # # Plot the shifted points as a line graph 
-        # figure_fft = plt.subplot(math.ceil(file_count/2), 2, image_counter+1)
-        # figure_fft = plt.title(str(image_names[image_counter]))  
+            # GRAPH 1: ORIGINAL 
+            axs_original.set_title("ORIGINAL GRAPH: " + str(temp_title))  
+            axs_original.plot(y, x)
 
-        # # figure_fft = plt.fill_between(new_array_y, new_array_x, color="grey")
-        # figure_fft = plt.plot(new_array_y, new_array_x)
+            average_x = np.mean(x)  
+            new_array_x = []
+            new_array_x_ABS = []
+            new_array_y = []
 
-        # THIS IS NOT USED:
-        # sos = signal.iirfilter(4, Wn=[0.1, 2.5], fs=30, btype="bandpass", ftype="butter", output="sos")
-        # yfilt = signal.sosfilt(sos, new_array_x)
+            # Take the absolute value and shift the points down to be centered around the horizontal axis
+            for i in range(0, len(x)):
+                new_array_y.append(y[i])
+                new_array_x.append(x[i]-average_x)
+                
+                # Use the below code to shift the points down to be centered around the horizontal axis AND be the absolute version of the graph
+                if x[i] < average_x: 
+                    c = 3
+                    new_array_x_ABS.append(average_x - x[i])
+                else:
+                    new_array_x_ABS.append(x[i] - average_x)
 
-        data_step = 0.1
-        n = len(new_array_y)
-        yf = rfft(new_array_x)
-        xf = rfftfreq(n, data_step)
+            data_step = 0.1
+            n = len(new_array_y)
+            yf = rfft(new_array_x)
+            xf = rfftfreq(n, data_step)
 
-        # figure_fft = plt.plot(xf, np.abs(yf))
+            yf_abs = np.abs(yf)
+            yf_max = np.max(yf_abs)
 
-        yf_abs = np.abs(yf)
-        yf_max = np.max(yf_abs)
-        
-        multiplier = 5
-        MIN_multiplier = 5
-        indices = yf_abs > (multiplier/100*yf_max)
-        yf_clean = indices*yf
-        new_f_clean = irfft(yf_clean)
-        x_peaks = signal.find_peaks(np.array(new_f_clean))
-        MIN_x_peaks = signal.find_peaks(np.array(-new_f_clean))
-
-        while len(x_peaks[0]) > 50 or len(MIN_x_peaks[0]) > 50:
+            # GRAPH 2: FFT
+            axs_fft.set_title("FFT: " + str(temp_title))  
+            axs_fft.plot(xf, yf_abs)
+            axs_fft.set_xlim(0, 0.5)
+           
+            multiplier = 5
+            MIN_multiplier = 5
             indices = yf_abs > (multiplier/100*yf_max)
             yf_clean = indices*yf
             new_f_clean = irfft(yf_clean)
             x_peaks = signal.find_peaks(np.array(new_f_clean))
             MIN_x_peaks = signal.find_peaks(np.array(-new_f_clean))
 
-            multiplier = multiplier+5
+            while len(x_peaks[0]) > 50 or len(MIN_x_peaks[0]) > 50:
+                indices = yf_abs > (multiplier/100*yf_max)
+                yf_clean = indices*yf
+                new_f_clean = irfft(yf_clean)
+                x_peaks = signal.find_peaks(np.array(new_f_clean))
+                MIN_x_peaks = signal.find_peaks(np.array(-new_f_clean))
 
-        if len(new_array_y) > len(new_f_clean):
-            new_new_array_y = new_array_y
-            new_new_array_y.pop(0)
-        #     figure_fft = plt.plot(new_new_array_y, new_f_clean)
-        # else:
-        #     figure_fft = plt.plot(new_array_y, new_f_clean)
+                multiplier = multiplier+5
 
-        # EXTRACTING OF NUMERICAL DATA FROM THE ABOVE GRAPH - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
-        total_area_trapz_x = trapz(new_array_x_ABS) # Area under the curve, using numpy's trapz formula
-        # figure_fft = plt.text(100, 10, "Abs Area: " + str(round(total_area_trapz_x, 2)), bbox=dict(facecolor='beige', alpha=0.5))
-        # figure_fft = plt.xlim(0, 600)
-        # figure_fft = plt.ylim(-20, 20)
-        
-        # Quantile values of the data
-        min, q1, q2, q3, q90, max = np.quantile(new_array_x, [0, 0.25, 0.5, 0.75, 0.9, 1])
-        iqr = q3-q1
-        std = np.std(new_array_x)
+            # GRAPH 3: IFFT
+            axs_ifft.set_title("IFFT: " + str(temp_title))  
+            axs_ifft.plot(new_array_y, new_array_x)
 
-        x_peaks = signal.find_peaks(np.array(new_f_clean))
-        num_peaks = len(x_peaks[0])
-        # figure_fft = plt.text(300, 10, "NUM PEAKS: " + str(num_peaks), bbox=dict(facecolor='beige', alpha=0.5))
-
-        y_peaks_points = []
-        x_peaks_points = []
-        sum_peaks = 0
-        for p in x_peaks[0]:
-            x_peaks_points.append(new_f_clean[p])
-            y_peaks_points.append(new_array_y[p])
-        # figure_fft = plt.plot(y_peaks_points, x_peaks_points, marker="x", linestyle="None", color='purple')
-
-        MIN_x_peaks = signal.find_peaks(np.array(-new_f_clean))
-        MIN_num_peaks = len(MIN_x_peaks[0])
-        # figure_fft = plt.text(500, 10, "NUM MIN PEAKS: " + str(MIN_num_peaks), bbox=dict(facecolor='beige', alpha=0.5))
-
-        MIN_y_peaks_points = []
-        MIN_x_peaks_points = []
-        for p in MIN_x_peaks[0]:
-            MIN_x_peaks_points.append(new_f_clean[p])
-            MIN_y_peaks_points.append(new_array_y[p])
-        # figure_fft = plt.plot(MIN_y_peaks_points, MIN_x_peaks_points, marker="x", linestyle="None", color='green')
-
-        peakmin_distance_array = []
-        for i in range(len(x_peaks_points)):
-            if y_peaks_points[i] < MIN_y_peaks_points[i]:
-                if i == 0:
-                    peakmin_distance_array.append(abs(x_peaks_points[i] - MIN_x_peaks_points[i]))
-                else:
-                    peakmin_distance_array.append(abs(x_peaks_points[i] - MIN_x_peaks_points[i-1]))
-                    peakmin_distance_array.append(abs(x_peaks_points[i] - MIN_x_peaks_points[i]))
+            if len(new_array_y) > len(new_f_clean):
+                new_new_array_y = new_array_y
+                new_new_array_y.pop(0)
+                axs_ifft.plot(new_new_array_y, new_f_clean)
             else:
-                peakmin_distance_array.append(abs(x_peaks_points[i] - MIN_x_peaks_points[i]))
-                if i < len(x_peaks_points)-1:
-                    peakmin_distance_array.append(abs(x_peaks_points[i] - MIN_x_peaks_points[i+1]))
+                axs_ifft.plot(new_array_y, new_f_clean)
 
-        average_peakmin_distance = np.mean(peakmin_distance_array)
-        # figure_fft = plt.text(100, -10, "Avg Peak Distance: " + str(round(average_peakmin_distance, 2)), bbox=dict(facecolor='beige', alpha=0.5))
-        # figure_fft = plt.text(300, -10, "NEW 1: " + str(round(average_peakmin_distance/num_peaks, 2)), bbox=dict(facecolor='beige', alpha=0.5))
-        # figure_fft = plt.text(500, -10, "NEW 2: " + str(round(average_peakmin_distance*num_peaks, 2)), bbox=dict(facecolor='beige', alpha=0.5))
+            axs_ifft.set_xlim(0, 600)
+            axs_ifft.set_ylim(-20, 20)
+            
+            # Quantile values of the data
+            min, q1, q2, q3, q90, max = np.quantile(new_array_x, [0, 0.25, 0.5, 0.75, 0.9, 1])
+            iqr = q3-q1
+            std = np.std(new_array_x)
 
-        results_array[image_counter][Results.AREA_TRAPZ.value] = total_area_trapz_x
-        results_array[image_counter][Results.MAX.value] = max
-        results_array[image_counter][Results.STDDEV.value] = std
+            x_peaks = signal.find_peaks(np.array(new_f_clean))
+            num_peaks = len(x_peaks[0])
+            # axs_ifft.text(300, 10, "NUM PEAKS: " + str(num_peaks), bbox=dict(facecolor='beige', alpha=1))
 
-        average_areas = []
-        temp_counter = 1
-        max_new_array_y = np.max(new_array_y)
-        percent_of_xaxis = int(5/100*max_new_array_y)
-        array_iterator = 0
-        
-        for i in range(percent_of_xaxis, max_new_array_y, percent_of_xaxis):
-            temp_array_x = []
-            temp_array_y = []
-            before_array_iterator = array_iterator
+            y_peaks_points = []
+            x_peaks_points = []
+            sum_peaks = 0
+            for p in x_peaks[0]:
+                x_peaks_points.append(new_f_clean[p])
+                y_peaks_points.append(new_array_y[p])
 
-            while new_array_y[array_iterator] < i:
-                temp_array_x.append(new_array_x[array_iterator])
-                temp_array_y.append(new_array_y[array_iterator])
-                array_iterator = array_iterator + 1
+            MIN_x_peaks = signal.find_peaks(np.array(-new_f_clean))
+            MIN_num_peaks = len(MIN_x_peaks[0])
+            MIN_y_peaks_points = []
+            MIN_x_peaks_points = []
+            for p in MIN_x_peaks[0]:
+                MIN_x_peaks_points.append(new_f_clean[p])
+                MIN_y_peaks_points.append(new_array_y[p])
 
-            if array_iterator == before_array_iterator:
-                temp_array_x.append(new_array_x[array_iterator-1])
-                temp_array_y.append(new_array_y[array_iterator-1])
-                temp_array_x.append(new_array_x[array_iterator])
-                temp_array_y.append(new_array_y[array_iterator])
-                        
-            temp_area_x = trapz(temp_array_x, temp_array_y)
-            average_areas.append(temp_area_x)   
-            temp_counter = temp_counter + 1
+            peakmin_distance_array = []
+            for i in range(len(x_peaks_points)):
+                if y_peaks_points[i] < MIN_y_peaks_points[i]:
+                    if i == 0:
+                        peakmin_distance_array.append(abs(x_peaks_points[i] - MIN_x_peaks_points[i]))
+                    else:
+                        peakmin_distance_array.append(abs(x_peaks_points[i] - MIN_x_peaks_points[i-1]))
+                        peakmin_distance_array.append(abs(x_peaks_points[i] - MIN_x_peaks_points[i]))
+                else:
+                    peakmin_distance_array.append(abs(x_peaks_points[i] - MIN_x_peaks_points[i]))
+                    if i < len(x_peaks_points)-1:
+                        peakmin_distance_array.append(abs(x_peaks_points[i] - MIN_x_peaks_points[i+1]))
 
-        # Quantile values of the data
-        avg_avg_area = np.mean(average_areas)
-        avg_min, avg_q1, avg_q2, avg_q3, avg_max = np.quantile(average_areas, [0, 0.25, 0.5, 0.75, 1])
-        avg_iqr = avg_q3-avg_q1
-        avg_std = np.std(average_areas)
+            average_peakmin_distance = np.mean(peakmin_distance_array)
+            # axs_ifft.text(300, -10, "Avg Peak Distance: " + str(round(average_peakmin_distance, 2)), bbox=dict(facecolor='beige', alpha=1))
 
-        results_array[image_counter][Results.AVG_AREA_TRAPZ.value] = avg_avg_area
-        results_array[image_counter][Results.AVG_AREA_MAX.value] = avg_max
-        results_array[image_counter][Results.AVG_AREA_STDDEV.value] = avg_std
+            # UNUSED METHOD: TRAPZ FORMULA (NUMPY)
+            total_area_trapz_x = trapz(new_array_x_ABS) # Area under the curve, using numpy's trapz formula
+            
+            # GRAPH 4: AREA GRAPH
+            axs_area.set_title("AREA UNDER CURVE: " + str(temp_title))  
+            axs_area.fill_between(new_array_y, new_array_x_ABS, color="grey")
+            axs_area.plot(new_array_y, new_array_x_ABS)
+            axs_area.set_xlim(0, 600)
 
-        results_array[image_counter][Results.NUM_PEAKS.value] = num_peaks
-        results_array[image_counter][Results.AVG_PEAK_DIST.value] = average_peakmin_distance
+            results_array[image_counter][Results.AREA_TRAPZ.value] = total_area_trapz_x
+            results_array[image_counter][Results.MAX.value] = max
+            results_array[image_counter][Results.STDDEV.value] = std
 
-    except:
-        print("ERROR: \t" + str(image_patient_number[image_counter]) + "\t -\t " + str(image_names[image_counter]))
+            average_areas = []
+            temp_counter = 1
+            max_new_array_y = np.max(new_array_y)
+            percent_of_xaxis = int(5/100*max_new_array_y)
+            array_iterator = 0
+            
+            for i in range(percent_of_xaxis, max_new_array_y, percent_of_xaxis):
+                temp_array_x = []
+                temp_array_y = []
+                before_array_iterator = array_iterator
 
-# figure_fft = plt.tight_layout()
-# figure_fft = plt.show()
+                while new_array_y[array_iterator] < i:
+                    temp_array_x.append(new_array_x[array_iterator])
+                    temp_array_y.append(new_array_y[array_iterator])
+                    array_iterator = array_iterator + 1
 
-table_columns = []
-for r in Results:
-    table_columns.append(str(r.name))
-df = pd.DataFrame(np.array(results_array), columns=table_columns)
-print("- - - - - RESULTS ARRAY - - - - -")
-display(df)
+                if array_iterator == before_array_iterator:
+                    temp_array_x.append(new_array_x[array_iterator-1])
+                    temp_array_y.append(new_array_y[array_iterator-1])
+                    temp_array_x.append(new_array_x[array_iterator])
+                    temp_array_y.append(new_array_y[array_iterator])
+                            
+                temp_area_x = trapz(temp_array_x, temp_array_y)
+                average_areas.append(temp_area_x)   
+                temp_counter = temp_counter + 1
 
-df.to_csv('Area/Results.csv', index=False)
+            # Quantile values of the data
+            avg_avg_area = np.mean(average_areas)
+            avg_min, avg_q1, avg_q2, avg_q3, avg_max = np.quantile(average_areas, [0, 0.25, 0.5, 0.75, 1])
+            avg_iqr = avg_q3-avg_q1
+            avg_std = np.std(average_areas)
+
+            results_array[image_counter][Results.AVG_AREA_TRAPZ.value] = avg_avg_area
+            results_array[image_counter][Results.AVG_AREA_MAX.value] = avg_max
+            results_array[image_counter][Results.AVG_AREA_STDDEV.value] = avg_std
+
+            results_array[image_counter][Results.NUM_PEAKS.value] = num_peaks
+            results_array[image_counter][Results.AVG_PEAK_DIST.value] = average_peakmin_distance
+        except:
+            print("ERROR: \t" + str(image_patient_number[image_counter]) + "\t -\t " + str(image_names[image_counter]))
+
+        plt.tight_layout()
+        plt.show()
+
+# SAVING THE DATA: (REMOVED FOR PRESENTATION PURPOSES)
+# table_columns = []
+# for r in Results:
+#     table_columns.append(str(r.name))
+# df = pd.DataFrame(np.array(results_array), columns=table_columns)
+# print("- - - - - RESULTS ARRAY - - - - -")
+# display(df)
+
+# df.to_csv('Area/Results.csv', index=False)
 # END OF CODE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #

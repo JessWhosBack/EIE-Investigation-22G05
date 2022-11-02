@@ -1,6 +1,6 @@
 # EIE Investigation: "Which Hand?"
 # Jesse van der Merwe (1829172) and Robyn Gebbie (2127777)
-# ELEN4012A 2022
+# ELEN4012A NOVEMBER 2022
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
 # COPYRIGHT NOTICE: 
@@ -128,8 +128,7 @@ for counter,image in enumerate(image_array):
 	image = cv2.resize(image, (newW, newH))
 	(H, W) = image.shape[:2]
 
-	# Define the two output layer names for the EAST detector model -- the first is the output probabilities and the
-	# second can be used to derive the bounding box coordinates of text
+	# Define the two output layer names for the EAST detector model -- the first is the output probabilities and the second can be used to derive the bounding box coordinates of text
 	layerNames = [
 		"feature_fusion/Conv_7/Sigmoid",
 		"feature_fusion/concat_3"]
@@ -144,8 +143,7 @@ for counter,image in enumerate(image_array):
 	net.setInput(blob)
 	(scores, geometry) = net.forward(layerNames)
 
-	# Show timing information on text prediction grab the number of rows and columns from the scores volume, then
-	# initialize our set of bounding box rectangles and corresponding confidence scores
+	# Show timing information on text prediction grab the number of rows and columns from the scores volume, then initialize our set of bounding box rectangles and corresponding confidence scores
 	(numRows, numCols) = scores.shape[2:4]
 	rects = []
 	confidences = []
@@ -236,11 +234,6 @@ for counter,image in enumerate(image_array):
 				if xEnd[i] - xStart[i] < 100:
 					B_position = i
 
-	# TESTING PURPOSES:
-	# print("A POS: " + str(A_position) + " B POS: " + str(B_position) + " C POS: " + str(C_position))
-	# print("X START: " + str(xStart) + "   X END: " + str(xEnd))
-	# print("Y START: " + str(yStart) + "   Y END: " + str(yEnd))
-
 	# In case a drawing is not found, use the average values instead
 	# NOTE: THIS IS NOT REALLY WORKING AS INTENDED - should maybe look into using position of other detected shapes instead
 	width = np.mean(array_width)
@@ -296,20 +289,11 @@ for counter,image in enumerate(image_array):
 	width = (xStart_B*cropToleranceA-xStart_A)
 	array_width.append(width)
 
-	# TESTING PURPOSES:
-	# print("WIDTH: " + str(width))
-	# print("XSA: " + str(xStart_A) + " XSB: " + str(xStart_B) + " XSC: " + str(xStart_C))
-	# print("YEA: " + str(yEnd_A) + " YEB: " + str(yEnd_B) + " YEC: " + str(yEnd_C))
-
 	# CROPPING OUT SPIRAL A - - - - - - - - - - - #
 	try:
 		finalA = cv2.cvtColor(finalA, cv2.COLOR_BGR2GRAY)
 		finalA = finalA[int(yEnd_A):int(yEnd_A+width), int(xStart_A):int(xStart_A + width)]
 		finalA = imutils.resize(finalA, width=squareDimension)
-
-		# (hFinalA,wFinalA) = finalA.shape[:2]
-		# if hFinalA != wFinalA:
-		# 	sizeErrorCountA = sizeErrorCountA + 1
 
 		new_image_path = str(image_path[counter])+'/DrawingA/'+str(image_names[counter])+"_A"+".jpg"
 		print(new_image_path)
@@ -323,10 +307,6 @@ for counter,image in enumerate(image_array):
 		finalB = finalB[ int(yEnd_B) : int((yEnd_B+width)), int(xStart_B*cropToleranceB): int((xStart_B+width)*cropToleranceB)]
 		finalB = imutils.resize(finalB, width=squareDimension)
 
-		# (hFinalB,wFinalB) = finalB.shape[:2]
-		# if hFinalB != wFinalB*cropToleranceB:
-		# 	sizeErrorCountB = sizeErrorCountB + 1
-
 		new_image_path = str(image_path[counter])+'/DrawingB/'+str(image_names[counter])+"_B"+".jpg"
 		print(new_image_path)
 		cv2.imwrite(new_image_path, finalB)
@@ -338,10 +318,6 @@ for counter,image in enumerate(image_array):
 		finalC = cv2.cvtColor(finalC, cv2.COLOR_BGR2GRAY)
 		finalC = finalC[ int(yEnd_C) : int(yEnd_C+0.75*width), int(xStart_C): int(xStart_B+width)]
 		finalC = imutils.resize(finalC, width=rectangleDimension)
-
-		# (hFinalC, wFinalC) = finalC.shape[:2]
-		# if hFinalC != wFinalC: 
-		# 	sizeErrorcountC = sizeErrorCountC + 1 
 		
 		new_image_path = str(image_path[counter])+'/DrawingC/'+str(image_names[counter])+"_C"+".jpg"
 		print(new_image_path)
@@ -349,18 +325,5 @@ for counter,image in enumerate(image_array):
 	except Exception as e:
 		print("Unable to save to file C as image size is empty: ",str(e))
 	print("Finished image ", image_names[counter])
-
-# REMOVING THE PERCENTAGE ERROR COUNT FOR NOW AS IT IS BUGGY
-# countSpiralA = glob.glob(str(imagePathA)+ "*.jpg")
-# countSpiralB = glob.glob(str(imagePathB)+ "*.jpg")
-# countSpiralC = glob.glob(str(imagePathC)+ "*.jpg")
-
-# countSpiralA = len(countSpiralA)
-# countSpiralB = len(countSpiralB)
-# countSpiralC = len(countSpiralC)
-
-# print("Percentage of Spiral A processed:", (float(countSpiralA-sizeErrorCountA)/float(rawCount))*100)
-# print("Percentage of Spiral B processed:", (float(countSpiralB-sizeErrorCountB)/float(rawCount))*100)
-# print("Percentage of Spiral C processed:", (float(countSpiralC-sizeErrorCountC)/float(rawCount))*100)
 
 # END OF CODE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #

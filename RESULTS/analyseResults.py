@@ -1,3 +1,18 @@
+# EIE Investigation: "Which Hand?"
+# Jesse van der Merwe (1829172) and Robyn Gebbie (2127777)
+# ELEN4012A NOVEMBER 2022
+
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+# COPYRIGHT NOTICE: 
+# This code is taken from Kelvin da Silva's Master's project which involved the classification of tremors. 
+# This can be found at: https://github.com/kdasilva835842/tremor_classification
+# 
+# Kelvin's code is based on the OpenCV Text Detection (EAST text detector) article by Adrian Rosebrock (20/08/2021).
+# This can be found at: https://pyimagesearch.com/2018/08/20/opencv-text-detection-east-text-detector/
+# 
+# The code has been further modified, with permission from Kelvin, to suit the needs of this project. 
+# - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
+
 import csv
 from matplotlib import pyplot as plt
 import numpy as np
