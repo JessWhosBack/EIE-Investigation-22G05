@@ -238,6 +238,8 @@ for image_counter, image in enumerate(image_array):
 
             data_step = 0.1
             n = len(new_array_y)
+
+            # Take the rfft of the array to find the frequency domain y-values
             yf = rfft(new_array_x)
             xf = rfftfreq(n, data_step)
 
@@ -251,25 +253,32 @@ for image_counter, image in enumerate(image_array):
            
             multiplier = 5
             MIN_multiplier = 5
+
+            # Only keep the values greater than a certain frequency
             indices = yf_abs > (multiplier/100*yf_max)
+
+            # Times these together to remove all lower frequencies
             yf_clean = indices*yf
+
+            # Find the irfft (should be the clean signal now)
             new_f_clean = irfft(yf_clean)
             x_peaks = signal.find_peaks(np.array(new_f_clean))
             MIN_x_peaks = signal.find_peaks(np.array(-new_f_clean))
 
+            # Check if there are too many peaks, and repeat the above process to reduce the frequency further 
             while len(x_peaks[0]) > 50 or len(MIN_x_peaks[0]) > 50:
                 indices = yf_abs > (multiplier/100*yf_max)
                 yf_clean = indices*yf
                 new_f_clean = irfft(yf_clean)
                 x_peaks = signal.find_peaks(np.array(new_f_clean))
                 MIN_x_peaks = signal.find_peaks(np.array(-new_f_clean))
-
                 multiplier = multiplier+5
 
             # GRAPH 3: IFFT
             axs_ifft.set_title("IFFT: " + str(temp_title))  
             axs_ifft.plot(new_array_y, new_array_x)
 
+            # Adjust length of array for missing first value
             if len(new_array_y) > len(new_f_clean):
                 new_new_array_y = new_array_y
                 new_new_array_y.pop(0)
@@ -285,9 +294,9 @@ for image_counter, image in enumerate(image_array):
             iqr = q3-q1
             std = np.std(new_array_x)
 
+            # Find the x-values of all the maximum points (peaks)
             x_peaks = signal.find_peaks(np.array(new_f_clean))
             num_peaks = len(x_peaks[0])
-            # axs_ifft.text(300, 10, "NUM PEAKS: " + str(num_peaks), bbox=dict(facecolor='beige', alpha=1))
 
             y_peaks_points = []
             x_peaks_points = []
@@ -296,6 +305,7 @@ for image_counter, image in enumerate(image_array):
                 x_peaks_points.append(new_f_clean[p])
                 y_peaks_points.append(new_array_y[p])
 
+            # Find the x-values of all the minimum points (by finding peaks of upsidown graph)
             MIN_x_peaks = signal.find_peaks(np.array(-new_f_clean))
             MIN_num_peaks = len(MIN_x_peaks[0])
             MIN_y_peaks_points = []
@@ -304,6 +314,7 @@ for image_counter, image in enumerate(image_array):
                 MIN_x_peaks_points.append(new_f_clean[p])
                 MIN_y_peaks_points.append(new_array_y[p])
 
+            # Find the distance between each peak and adjacent minimum
             peakmin_distance_array = []
             for i in range(len(x_peaks_points)):
                 if y_peaks_points[i] < MIN_y_peaks_points[i]:
@@ -318,7 +329,6 @@ for image_counter, image in enumerate(image_array):
                         peakmin_distance_array.append(abs(x_peaks_points[i] - MIN_x_peaks_points[i+1]))
 
             average_peakmin_distance = np.mean(peakmin_distance_array)
-            # axs_ifft.text(300, -10, "Avg Peak Distance: " + str(round(average_peakmin_distance, 2)), bbox=dict(facecolor='beige', alpha=1))
 
             # UNUSED METHOD: TRAPZ FORMULA (NUMPY)
             total_area_trapz_x = trapz(new_array_x_ABS) # Area under the curve, using numpy's trapz formula
@@ -365,10 +375,10 @@ for image_counter, image in enumerate(image_array):
             avg_iqr = avg_q3-avg_q1
             avg_std = np.std(average_areas)
 
+            # Save all the values into the results array
             results_array[image_counter][Results.AVG_AREA_TRAPZ.value] = avg_avg_area
             results_array[image_counter][Results.AVG_AREA_MAX.value] = avg_max
             results_array[image_counter][Results.AVG_AREA_STDDEV.value] = avg_std
-
             results_array[image_counter][Results.NUM_PEAKS.value] = num_peaks
             results_array[image_counter][Results.AVG_PEAK_DIST.value] = average_peakmin_distance
         except:
