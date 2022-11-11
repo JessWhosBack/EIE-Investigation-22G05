@@ -688,8 +688,9 @@ ax2.set_ylabel('Number of Patients')
 ax2.legend(['Number of\npatients'], loc="upper center", prop={'size': 14})
 ax2.set_ylim(0, 100)
 plt.rcParams["figure.figsize"] = (8,4)
-print("AVERAGE: " + str(np.average(D_improved_percentage)))
-plt.savefig('RESULTS\GRAPHS\PercentageOfPatients.png', bbox_inches='tight', dpi=150)
+print("AVERAGE TREATED: " + str(np.average(D_improved_percentage)))
+print("AVERAGE UNTREATED: " + str(np.average(ND_improved_percentage)))
+# plt.savefig('RESULTS\GRAPHS\PercentageOfPatients.png', bbox_inches='tight', dpi=150)
 ## GRAPH 1: PERCENTAGE OF PATIENTS WITH TREMOR BEFORE TREATMENT THAT IMPROVED AFTER VARIOUS TREATMENT TIMES
 
 ## GRAPH 2: PERCENTAGE OF PATIENTS WITH TREMOR BEFORE TREATMENT THAT IMPROVED AFTER VARIOUS TREATMENT TIMES
@@ -1287,7 +1288,7 @@ ax1_ALLPATIENTS4.plot(x_array, ND_averages, color = 'cornflowerblue')
 ax1_ALLPATIENTS4.set_ylabel('Tremor Severity')
 ax1_ALLPATIENTS4.set_xlabel('Time')
 ax1_ALLPATIENTS4.legend(['Treated Hand', 'Untreated Hand'], loc="upper right", prop={'size': 14})
-plt.savefig('RESULTS\GRAPHS\AverageTremSev.png', bbox_inches='tight', dpi=150)
+# plt.savefig('RESULTS\GRAPHS\AverageTremSev.png', bbox_inches='tight', dpi=150)
 
 plt.show()
 
