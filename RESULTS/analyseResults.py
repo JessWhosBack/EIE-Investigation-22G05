@@ -611,14 +611,16 @@ def checkImproved(before, arr):
     avg_diff_improved = 0
 
     for i in range(len(before)):
-        if ((before[i] != 0) and (arr[i] != 0)):
+        abs_before = abs(float(before[i]))
+        abs_arr = abs(float(arr[i]))
+        if (abs_before != 0) and (abs_arr != 0) and (abs_before != -1) and (abs_arr != -1):
             both += 1
-            avg_diff += before[i] - arr[i]
+            avg_diff += float(abs_before) - float(abs_arr)
 
-            if(arr[i] < before[i]):
+            if float(abs_arr) < float(abs_before):
                 improved += 1
-                avg_amount += arr[i]
-                avg_diff_improved += before[i] - arr[i]
+                avg_amount += float(abs_arr)
+                avg_diff_improved += float(abs_before) - float(abs_arr)
 
     avg_diff = avg_diff/both
     avg_diff_improved = avg_diff_improved/improved
@@ -661,6 +663,48 @@ avg_total_num = [(D_both_1W+ND_both_1W)/2, (D_both_1M+ND_both_1M)/2, (D_both_3M+
 
 
 
+
+
+
+
+
+
+D_both_1W_AVG_AREA, D_improved_1W_AVG_AREA, D_avg_amount_1W_AVG_AREA, D_avg_diff_1W_AVG_AREA, D_avg_diff_improved_1W_AVG_AREA = checkImproved(D_time_before_avg_area_trapz, D_time_1W_avg_area_trapz)
+D_both_1M_AVG_AREA, D_improved_1M_AVG_AREA, D_avg_amount_1M_AVG_AREA, D_avg_diff_1M_AVG_AREA, D_avg_diff_improved_1M_AVG_AREA = checkImproved(D_time_before_avg_area_trapz, D_time_1M_avg_area_trapz)
+D_both_3M_AVG_AREA, D_improved_3M_AVG_AREA, D_avg_amount_3M_AVG_AREA, D_avg_diff_3M_AVG_AREA, D_avg_diff_improved_3M_AVG_AREA = checkImproved(D_time_before_avg_area_trapz, D_time_3M_avg_area_trapz)
+D_both_6M_AVG_AREA, D_improved_6M_AVG_AREA, D_avg_amount_6M_AVG_AREA, D_avg_diff_6M_AVG_AREA, D_avg_diff_improved_6M_AVG_AREA = checkImproved(D_time_before_avg_area_trapz, D_time_6M_avg_area_trapz)
+D_both_1Y_AVG_AREA, D_improved_1Y_AVG_AREA, D_avg_amount_1Y_AVG_AREA, D_avg_diff_1Y_AVG_AREA, D_avg_diff_improved_1Y_AVG_AREA = checkImproved(D_time_before_avg_area_trapz, D_time_1Y_avg_area_trapz)
+D_both_2Y_AVG_AREA, D_improved_2Y_AVG_AREA, D_avg_amount_2Y_AVG_AREA, D_avg_diff_2Y_AVG_AREA, D_avg_diff_improved_2Y_AVG_AREA = checkImproved(D_time_before_avg_area_trapz, D_time_2Y_avg_area_trapz)
+D_both_3Y_AVG_AREA, D_improved_3Y_AVG_AREA, D_avg_amount_3Y_AVG_AREA, D_avg_diff_3Y_AVG_AREA, D_avg_diff_improved_3Y_AVG_AREA = checkImproved(D_time_before_avg_area_trapz, D_time_3Y_avg_area_trapz)
+D_both_4Y_AVG_AREA, D_improved_4Y_AVG_AREA, D_avg_amount_4Y_AVG_AREA, D_avg_diff_4Y_AVG_AREA, D_avg_diff_improved_4Y_AVG_AREA = checkImproved(D_time_before_avg_area_trapz, D_time_4Y_avg_area_trapz)
+
+ND_both_1W_AVG_AREA, ND_improved_1W_AVG_AREA, ND_avg_amount_1W_AVG_AREA, ND_avg_diff_1W_AVG_AREA, ND_avg_diff_improved_1W_AVG_AREA = checkImproved(ND_time_before_avg_area_trapz, ND_time_1W_avg_area_trapz)
+ND_both_1M_AVG_AREA, ND_improved_1M_AVG_AREA, ND_avg_amount_1M_AVG_AREA, ND_avg_diff_1M_AVG_AREA, ND_avg_diff_improved_1M_AVG_AREA = checkImproved(ND_time_before_avg_area_trapz, ND_time_1M_avg_area_trapz)
+ND_both_3M_AVG_AREA, ND_improved_3M_AVG_AREA, ND_avg_amount_3M_AVG_AREA, ND_avg_diff_3M_AVG_AREA, ND_avg_diff_improved_3M_AVG_AREA = checkImproved(ND_time_before_avg_area_trapz, ND_time_3M_avg_area_trapz)
+ND_both_6M_AVG_AREA, ND_improved_6M_AVG_AREA, ND_avg_amount_6M_AVG_AREA, ND_avg_diff_6M_AVG_AREA, ND_avg_diff_improved_6M_AVG_AREA = checkImproved(ND_time_before_avg_area_trapz, ND_time_6M_avg_area_trapz)
+ND_both_1Y_AVG_AREA, ND_improved_1Y_AVG_AREA, ND_avg_amount_1Y_AVG_AREA, ND_avg_diff_1Y_AVG_AREA, ND_avg_diff_improved_1Y_AVG_AREA = checkImproved(ND_time_before_avg_area_trapz, ND_time_1Y_avg_area_trapz)
+ND_both_2Y_AVG_AREA, ND_improved_2Y_AVG_AREA, ND_avg_amount_2Y_AVG_AREA, ND_avg_diff_2Y_AVG_AREA, ND_avg_diff_improved_2Y_AVG_AREA = checkImproved(ND_time_before_avg_area_trapz, ND_time_2Y_avg_area_trapz)
+ND_both_3Y_AVG_AREA, ND_improved_3Y_AVG_AREA, ND_avg_amount_3Y_AVG_AREA, ND_avg_diff_3Y_AVG_AREA, ND_avg_diff_improved_3Y_AVG_AREA = checkImproved(ND_time_before_avg_area_trapz, ND_time_3Y_avg_area_trapz)
+ND_both_4Y_AVG_AREA, ND_improved_4Y_AVG_AREA, ND_avg_amount_4Y_AVG_AREA, ND_avg_diff_4Y_AVG_AREA, ND_avg_diff_improved_4Y_AVG_AREA = checkImproved(ND_time_before_avg_area_trapz, ND_time_4Y_avg_area_trapz)
+
+
+D_improved_percentage_AVG_AREA = [D_improved_1W_AVG_AREA/D_both_1W_AVG_AREA*100, D_improved_1M_AVG_AREA/D_both_1M_AVG_AREA*100, D_improved_3M_AVG_AREA/D_both_3M_AVG_AREA*100, D_improved_6M_AVG_AREA/D_both_6M_AVG_AREA*100, D_improved_1Y_AVG_AREA/D_both_1Y_AVG_AREA*100, D_improved_2Y_AVG_AREA/D_both_2Y_AVG_AREA*100, D_improved_3Y_AVG_AREA/D_both_3Y_AVG_AREA*100, D_improved_4Y_AVG_AREA/D_both_4Y_AVG_AREA*100]
+ND_improved_percentage_AVG_AREA = [ND_improved_1W_AVG_AREA/ND_both_1W_AVG_AREA*100, ND_improved_1M_AVG_AREA/ND_both_1M_AVG_AREA*100, ND_improved_3M_AVG_AREA/ND_both_3M_AVG_AREA*100, ND_improved_6M_AVG_AREA/ND_both_6M_AVG_AREA*100, ND_improved_1Y_AVG_AREA/ND_both_1Y_AVG_AREA*100, ND_improved_2Y_AVG_AREA/ND_both_2Y_AVG_AREA*100, ND_improved_3Y_AVG_AREA/ND_both_3Y_AVG_AREA*100, ND_improved_4Y_AVG_AREA/ND_both_4Y_AVG_AREA*100]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # print("3Y: " + str(ND_avg_diff_3Y))
 
 ## GENERAL GRAPH SETTINGS
@@ -672,7 +716,7 @@ plt.rcParams.update({'font.size': 16})
 x = ['1W', '1M', '3M', '6M', '1Y', '2Y', '3Y', '4Y']
 x_axis = np.arange(len(x))
 fig, ax1 = plt.subplots(figsize = (8,4))
-plt.title('Percentage of Patients with Tremor Before Treatment that Improved\nAfter Various Treatment Times')
+plt.title('Percentage of Patients with Tremor Before Treatment that Improved\nAfter Various Treatment Times - PEAK DISTANCE METHOD')
 plt.grid(linestyle = '-', linewidth=0.5, axis='y')
 plt.tight_layout()
 
@@ -687,11 +731,9 @@ ax2.plot(x, avg_total_num, color = 'red')
 ax2.set_ylabel('Number of Patients')
 ax2.legend(['Number of\npatients'], loc="upper center", prop={'size': 14})
 ax2.set_ylim(0, 100)
-plt.rcParams["figure.figsize"] = (8,4)
-print("AVERAGE TREATED: " + str(np.average(D_improved_percentage)))
-print("AVERAGE UNTREATED: " + str(np.average(ND_improved_percentage)))
-# plt.savefig('RESULTS\GRAPHS\PercentageOfPatients.png', bbox_inches='tight', dpi=150)
-## GRAPH 1: PERCENTAGE OF PATIENTS WITH TREMOR BEFORE TREATMENT THAT IMPROVED AFTER VARIOUS TREATMENT TIMES
+print("AVERAGE: " + str(np.average(D_improved_percentage)))
+plt.savefig('RESULTS\GRAPHS\PercentageOfPatients_Det2.png', bbox_inches='tight', dpi=150)
+## END OF GRAPH 1: PERCENTAGE OF PATIENTS WITH TREMOR BEFORE TREATMENT THAT IMPROVED AFTER VARIOUS TREATMENT TIMES
 
 ## GRAPH 2: PERCENTAGE OF PATIENTS WITH TREMOR BEFORE TREATMENT THAT IMPROVED AFTER VARIOUS TREATMENT TIMES
 fig, ax1 = plt.subplots(figsize = (8,4))
@@ -743,6 +785,33 @@ plt.show()
 # plt.ylabel('Percentage that Improved')
 # plt.legend()
 # plt.show()
+
+
+## GRAPH 3: PERCENTAGE OF PATIENTS WITH TREMOR BEFORE TREATMENT THAT IMPROVED AFTER VARIOUS TREATMENT TIMES - AVG AREA
+x = ['1W', '1M', '3M', '6M', '1Y', '2Y', '3Y', '4Y']
+x_axis = np.arange(len(x))
+fig, ax1 = plt.subplots(figsize = (8,4))
+plt.title('Percentage of Patients with Tremor Before Treatment that Improved\nAfter Various Treatment Times - AVERAGE AREA METHOD')
+plt.grid(linestyle = '-', linewidth=0.5, axis='y')
+plt.tight_layout()
+
+ax1.bar(x_axis - 0.15, D_improved_percentage_AVG_AREA, 0.3, label = 'Treated Hand', color = 'darkblue')
+ax1.bar(x_axis + 0.15, ND_improved_percentage_AVG_AREA, 0.3, label = 'Treated Hand', color = 'cornflowerblue')
+ax1.set_ylabel('Percentage Improved')
+ax1.set_xlabel('Time')
+ax1.legend(['Treated Hand', 'Untreated Hand'], loc="upper right", prop={'size': 14})
+ax1.set_ylim(0, 100)
+ax2 = ax1.twinx()
+ax2.plot(x, avg_total_num, color = 'red')
+ax2.set_ylabel('Number of Patients')
+ax2.legend(['Number of\npatients'], loc="upper center", prop={'size': 14})
+ax2.set_ylim(0, 100)
+plt.rcParams["figure.figsize"] = (8,4)
+print("AVERAGE: " + str(np.average(D_improved_percentage_AVG_AREA)))
+plt.savefig('RESULTS\GRAPHS\PercentageOfPatients_AvgArea.png', bbox_inches='tight', dpi=150)
+## GRAPH 1: PERCENTAGE OF PATIENTS WITH TREMOR BEFORE TREATMENT THAT IMPROVED AFTER VARIOUS TREATMENT TIMES
+
+
 # # - - - - - - - - - - - - - - - - - - - - - - - - END OF GRAPHS 
 
 
@@ -1173,7 +1242,7 @@ plt.show()
 
 x_array = [1,2,3,4,5,6,7,8,9]
 fig_ALLPATIENTS3, ax1_ALLPATIENTS3 = plt.subplots(figsize = (8,4))
-plt.title('Average Tremor Severities for Each Hand')
+plt.title('Average Tremor Severities for Each Hand\nPEAK DISTANCE METHOD')
 plt.grid(linestyle = '-', linewidth=0.5, axis='y')
 plt.xticks(x_array, ['Before', '1W', '1M', '3M', '6M', '1Y', '2Y', '3Y', '4Y'])
 
@@ -1210,9 +1279,47 @@ plt.tight_layout()
 
 plt.show()
 
+# LOOK HERE AVERAGE TREMOR SEVERITY USING AVG AREA TRAPZ METHOD
+x_array = [1,2,3,4,5,6,7,8,9]
+fig_ALLPATIENTS3B, ax1_ALLPATIENTS3B = plt.subplots(figsize = (8,4))
+plt.title('Average Tremor Severities for Each Hand\nAVERAGE AREA TRAPZ METHOD')
+plt.grid(linestyle = '-', linewidth=0.5, axis='y')
+plt.xticks(x_array, ['Before', '1W', '1M', '3M', '6M', '1Y', '2Y', '3Y', '4Y'])
 
+D_average_before_avg_area_trapz = np.mean([abs(float(x)) for x in D_time_before_avg_area_trapz])
+D_average_1W_avg_area_trapz = np.mean([abs(float(x)) for x in D_time_1W_avg_area_trapz])
+D_average_1M_avg_area_trapz = np.mean([abs(float(x)) for x in D_time_1M_avg_area_trapz])
+D_average_3M_avg_area_trapz = np.mean([abs(float(x)) for x in D_time_3M_avg_area_trapz])
+D_average_6M_avg_area_trapz = np.mean([abs(float(x)) for x in D_time_6M_avg_area_trapz])
+D_average_1Y_avg_area_trapz = np.mean([abs(float(x)) for x in D_time_1Y_avg_area_trapz])
+D_average_2Y_avg_area_trapz = np.mean([abs(float(x)) for x in D_time_2Y_avg_area_trapz])
+D_average_3Y_avg_area_trapz = np.mean([abs(float(x)) for x in D_time_3Y_avg_area_trapz])
+D_average_4Y_avg_area_trapz = np.mean([abs(float(x)) for x in D_time_4Y_avg_area_trapz])
 
+ND_average_before_avg_area_trapz = np.mean([abs(float(x)) for x in ND_time_before_avg_area_trapz])
+ND_average_1W_avg_area_trapz = np.mean([abs(float(x)) for x in ND_time_1W_avg_area_trapz])
+ND_average_1M_avg_area_trapz = np.mean([abs(float(x)) for x in ND_time_1M_avg_area_trapz])
+ND_average_3M_avg_area_trapz = np.mean([abs(float(x)) for x in ND_time_3M_avg_area_trapz])
+ND_average_6M_avg_area_trapz = np.mean([abs(float(x)) for x in ND_time_6M_avg_area_trapz])
+ND_average_1Y_avg_area_trapz = np.mean([abs(float(x)) for x in ND_time_1Y_avg_area_trapz])
+ND_average_2Y_avg_area_trapz = np.mean([abs(float(x)) for x in ND_time_2Y_avg_area_trapz])
+ND_average_3Y_avg_area_trapz = np.mean([abs(float(x)) for x in ND_time_3Y_avg_area_trapz])
+ND_average_4Y_avg_area_trapz = np.mean([abs(float(x)) for x in ND_time_4Y_avg_area_trapz])
 
+D_averages = [D_average_before_avg_area_trapz, D_average_1W_avg_area_trapz, D_average_1M_avg_area_trapz, D_average_3M_avg_area_trapz, D_average_6M_avg_area_trapz, D_average_1Y_avg_area_trapz, D_average_2Y_avg_area_trapz, D_average_3Y_avg_area_trapz, D_average_4Y_avg_area_trapz]
+ND_averages = [ND_average_before_avg_area_trapz, ND_average_1W_avg_area_trapz, ND_average_1M_avg_area_trapz, ND_average_3M_avg_area_trapz, ND_average_6M_avg_area_trapz, ND_average_1Y_avg_area_trapz, ND_average_2Y_avg_area_trapz, ND_average_3Y_avg_area_trapz, ND_average_4Y_avg_area_trapz]
+
+plt.legend()
+ax1_ALLPATIENTS3B.plot(x_array, D_averages, color = 'darkblue')
+ax1_ALLPATIENTS3B.plot(x_array, ND_averages, color = 'cornflowerblue')
+ax1_ALLPATIENTS3B.set_ylabel('Tremor Severity')
+ax1_ALLPATIENTS3B.set_xlabel('Time')
+ax1_ALLPATIENTS3B.legend(['Treated Hand', 'Untreated Hand'], loc="upper right")
+plt.savefig('RESULTS\GRAPHS\AverageTremSev_AvgArea.png', bbox_inches='tight', dpi=150)
+
+plt.tight_layout()
+
+plt.show()
 
 
 
@@ -1225,7 +1332,7 @@ plt.show()
 
 x_array = [1,2,3,4,5,6,7,8,9]
 fig_ALLPATIENTS4, ax1_ALLPATIENTS4 = plt.subplots(figsize = (8,4))
-plt.title('Average Tremor Severities for Each Hand')
+plt.title('Normalised Average Tremor Severities for Each Hand\nPEAK DISTANCE METHOD')
 plt.grid(linestyle = '-', linewidth=0.5, axis='y')
 plt.xticks(x_array, ['Before', '1W', '1M', '3M', '6M', '1Y', '2Y', '3Y', '4Y'])
 
@@ -1288,7 +1395,7 @@ ax1_ALLPATIENTS4.plot(x_array, ND_averages, color = 'cornflowerblue')
 ax1_ALLPATIENTS4.set_ylabel('Tremor Severity')
 ax1_ALLPATIENTS4.set_xlabel('Time')
 ax1_ALLPATIENTS4.legend(['Treated Hand', 'Untreated Hand'], loc="upper right", prop={'size': 14})
-# plt.savefig('RESULTS\GRAPHS\AverageTremSev.png', bbox_inches='tight', dpi=150)
+plt.savefig('RESULTS\GRAPHS\AverageTremSev_Det2.png', bbox_inches='tight', dpi=150)
 
 plt.show()
 
@@ -1300,6 +1407,75 @@ plt.show()
 
 
 
+# # - - - - - - - - - - - - - - - - - - - - - - - - START OF "WHICH HAND?" FOURB
+
+x_array = [1,2,3,4,5,6,7,8,9]
+fig_ALLPATIENTS4B, ax1_ALLPATIENTS4B = plt.subplots(figsize = (8,4))
+plt.title('Normalised Average Tremor Severities for Each Hand\nAVERAGE AREA TRAPZ METHOD')
+plt.grid(linestyle = '-', linewidth=0.5, axis='y')
+plt.xticks(x_array, ['Before', '1W', '1M', '3M', '6M', '1Y', '2Y', '3Y', '4Y'])
+
+all_arrays = [*([abs(float(x)) for x in D_time_before_avg_area_trapz]),*([abs(float(x)) for x in D_time_1W_avg_area_trapz]),*([abs(float(x)) for x in D_time_1M_avg_area_trapz]),*([abs(float(x)) for x in D_time_3M_avg_area_trapz]),*([abs(float(x)) for x in D_time_6M_avg_area_trapz]),*([abs(float(x)) for x in D_time_1Y_avg_area_trapz]),*([abs(float(x)) for x in D_time_2Y_avg_area_trapz]),*([abs(float(x)) for x in D_time_3Y_avg_area_trapz]),*([abs(float(x)) for x in D_time_4Y_avg_area_trapz]),*([abs(float(x)) for x in ND_time_before_avg_area_trapz]),*([abs(float(x)) for x in ND_time_1W_avg_area_trapz]),*([abs(float(x)) for x in ND_time_1M_avg_area_trapz]),*([abs(float(x)) for x in ND_time_3M_avg_area_trapz]),*([abs(float(x)) for x in ND_time_6M_avg_area_trapz]),*([abs(float(x)) for x in ND_time_1Y_avg_area_trapz]),*([abs(float(x)) for x in ND_time_2Y_avg_area_trapz]),*([abs(float(x)) for x in ND_time_3Y_avg_area_trapz]),*([abs(float(x)) for x in ND_time_4Y_avg_area_trapz])]
+all_min, q10, q90, q95, q98, q999, all_max = np.quantile(all_arrays, [0, 0.1, 0.9, 0.95, 0.98, 0.99, 1])
+denom = q95 - all_min
+
+
+# (x-min)/(max-min)
+D_time_before_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in D_time_before_avg_area_trapz]]
+D_time_1W_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in  D_time_1W_avg_area_trapz]]
+D_time_1M_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in D_time_1M_avg_area_trapz]]
+D_time_3M_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in D_time_3M_avg_area_trapz]]
+D_time_6M_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in D_time_6M_avg_area_trapz]]
+D_time_1Y_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in D_time_1Y_avg_area_trapz]]
+D_time_2Y_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in D_time_2Y_avg_area_trapz]]
+D_time_3Y_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in D_time_3Y_avg_area_trapz]]
+D_time_4Y_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in D_time_4Y_avg_area_trapz]]
+
+D_times_normalised = [D_time_before_normalised, D_time_1W_normalised, D_time_1M_normalised, D_time_3M_normalised, D_time_6M_normalised,  D_time_1Y_normalised, D_time_2Y_normalised, D_time_3Y_normalised, D_time_4Y_normalised]
+
+ND_time_before_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in ND_time_before_avg_area_trapz]]
+ND_time_1W_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in ND_time_1W_avg_area_trapz]]
+ND_time_1M_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in ND_time_1M_avg_area_trapz]]
+ND_time_3M_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in ND_time_3M_avg_area_trapz]]
+ND_time_6M_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in ND_time_6M_avg_area_trapz]]
+ND_time_1Y_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in ND_time_1Y_avg_area_trapz]]
+ND_time_2Y_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in ND_time_2Y_avg_area_trapz]]
+ND_time_3Y_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in ND_time_3Y_avg_area_trapz]]
+ND_time_4Y_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in ND_time_4Y_avg_area_trapz]]
+
+D_average_before_det_2 = np.mean(D_time_before_normalised)
+D_average_1W_det_2 = np.mean(D_time_1W_normalised)
+D_average_1M_det_2 = np.mean(D_time_1M_normalised)
+D_average_3M_det_2 = np.mean(D_time_3M_normalised)
+D_average_6M_det_2 = np.mean(D_time_6M_normalised)
+D_average_1Y_det_2 = np.mean(D_time_1Y_normalised)
+D_average_2Y_det_2 = np.mean(D_time_2Y_normalised)
+D_average_3Y_det_2 = np.mean(D_time_3Y_normalised)
+D_average_4Y_det_2 = np.mean(D_time_4Y_normalised)
+
+ND_average_before_det_2 = np.mean(ND_time_before_normalised)
+ND_average_1W_det_2 = np.mean(ND_time_1W_normalised)
+ND_average_1M_det_2 = np.mean(ND_time_1M_normalised)
+ND_average_3M_det_2 = np.mean(ND_time_3M_normalised)
+ND_average_6M_det_2 = np.mean(ND_time_6M_normalised)
+ND_average_1Y_det_2 = np.mean(ND_time_1Y_normalised)
+ND_average_2Y_det_2 = np.mean(ND_time_2Y_normalised)
+ND_average_3Y_det_2 = np.mean(ND_time_3Y_normalised)
+ND_average_4Y_det_2 = np.mean(ND_time_4Y_normalised)
+
+D_averages = [D_average_before_det_2, D_average_1W_det_2, D_average_1M_det_2, D_average_3M_det_2, D_average_6M_det_2, D_average_1Y_det_2, D_average_2Y_det_2, D_average_3Y_det_2, D_average_4Y_det_2]
+ND_averages = [ND_average_before_det_2, ND_average_1W_det_2, ND_average_1M_det_2, ND_average_3M_det_2, ND_average_6M_det_2, ND_average_1Y_det_2, ND_average_2Y_det_2, ND_average_3Y_det_2, ND_average_4Y_det_2]
+
+
+plt.legend()
+ax1_ALLPATIENTS4B.plot(x_array, D_averages, color = 'darkblue')
+ax1_ALLPATIENTS4B.plot(x_array, ND_averages, color = 'cornflowerblue')
+ax1_ALLPATIENTS4B.set_ylabel('Tremor Severity')
+ax1_ALLPATIENTS4B.set_xlabel('Time')
+ax1_ALLPATIENTS4B.legend(['Treated Hand', 'Untreated Hand'], loc="upper right", prop={'size': 14})
+plt.savefig('RESULTS\GRAPHS\AverageTremSev_AvgArea.png', bbox_inches='tight', dpi=150)
+
+plt.show()
 
 
 

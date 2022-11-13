@@ -9,8 +9,8 @@
 # 
 # This code also contains snippets from jdhao's article "Cropping Rotated Rectangles from Image with OpenCV" (23/02/2019)
 # Which can be found at: https://jdhao.github.io/2019/02/23/crop_rotated_rectangle_opencv/
-# 
-# It has further been modified and combined to suit the needs of this project.
+# This code is under the license: CC BY-NC-ND 4.0 (https://creativecommons.org/licenses/by-nc-nd/4.0/) 
+# It has further been modified and combined to suit the needs of this project, but will not be further distributed.
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
 
 # IMPORTS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #

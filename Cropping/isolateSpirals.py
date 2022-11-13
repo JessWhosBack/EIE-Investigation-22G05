@@ -109,7 +109,6 @@ for counter,image in enumerate(image_array):
 
 	(total_h,total_w) = image.shape[:2]
 	mask = np.zeros((total_h,total_w), np.uint8)
-	# cv2.rectangle	(image,	(start_x, start_y), (end_x, end_y),		color, 	thickness)
 	cv2.rectangle	(mask, 	(0, int(0.245*total_h)), 	(total_w, int(total_h*0.8)),	255, 	-1)
 
 	image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
@@ -235,7 +234,6 @@ for counter,image in enumerate(image_array):
 					B_position = i
 
 	# In case a drawing is not found, use the average values instead
-	# NOTE: THIS IS NOT REALLY WORKING AS INTENDED - should maybe look into using position of other detected shapes instead
 	width = np.mean(array_width)
 	xStart_A = np.mean(array_xStartA)
 	xStart_B = np.mean(array_xStartB)
