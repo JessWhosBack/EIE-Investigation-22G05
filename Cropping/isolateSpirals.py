@@ -46,10 +46,8 @@ with tempfile.TemporaryDirectory() as tempDir:
 			for filename in glob.glob(foldername + '/*.pdf'):
 				arrayName = os.path.basename(filename)
 				arrayName = arrayName.replace(".pdf","")
-
 				newName = filename.replace(".pdf","")
 				newName = str(tempDir) + "/"+str(arrayName)
-
 				newPath = foldername.replace("Original", "Cropped")
 				image_path.append(newPath)
 
@@ -294,7 +292,6 @@ for counter,image in enumerate(image_array):
 		finalA = imutils.resize(finalA, width=squareDimension)
 
 		new_image_path = str(image_path[counter])+'/DrawingA/'+str(image_names[counter])+"_A"+".jpg"
-		print(new_image_path)
 		cv2.imwrite(new_image_path, finalA)
 	except Exception as e:
 		print("Unable to save to file A as image size is empty: ",str(e))
@@ -306,7 +303,6 @@ for counter,image in enumerate(image_array):
 		finalB = imutils.resize(finalB, width=squareDimension)
 
 		new_image_path = str(image_path[counter])+'/DrawingB/'+str(image_names[counter])+"_B"+".jpg"
-		print(new_image_path)
 		cv2.imwrite(new_image_path, finalB)
 	except Exception as e:
 		print("Unable to save to file B as image size is empty: ",str(e))
@@ -318,7 +314,6 @@ for counter,image in enumerate(image_array):
 		finalC = imutils.resize(finalC, width=rectangleDimension)
 		
 		new_image_path = str(image_path[counter])+'/DrawingC/'+str(image_names[counter])+"_C"+".jpg"
-		print(new_image_path)
 		cv2.imwrite(new_image_path, finalC)
 	except Exception as e:
 		print("Unable to save to file C as image size is empty: ",str(e))

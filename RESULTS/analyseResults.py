@@ -13,33 +13,13 @@
 # The code has been further modified, with permission from Kelvin, to suit the needs of this project. 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
 
+# IMPORTS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
 import csv
 from matplotlib import pyplot as plt
 import numpy as np
 import pandas as pd
 
 # IT SHOULD BE NOTED THAT "DOMINANT" AND "NON-DOMINANT" HAND REFERS TO "TREATED" AND "NON-TREATED" HANDS. 
-# YES THIS IS CONFUSING 
-# YES IT WAS TOO LATE TO CHANGE IT 
-
-# class Results(Enum):
-    # FILENAME = 0
-    # PATIENT_NUMBER = 1
-    # DOMINANT_HAND = 2
-    # TREATED_HAND = 3
-    # TIME_PERIOD = 4
-
-    # AREA_TRAPZ = 5
-    # MAX = 6
-    # STDDEV = 7
-
-    # AVG_AREA_TRAPZ = 8
-    # AVG_AREA_MAX = 9
-    # AVG_AREA_STDDEV = 10
-
-    # NUM_PEAKS = 11
-    # AVG_PEAK_DIST = 12
-
 patient_number_array = []
 patient_dominant_hand = []
 patient_treated_hand = []
@@ -54,7 +34,7 @@ patient_avg_peak_dist = []
 patient_determinator_1 = []
 patient_determinator_2 = []
 
-with open('Area\Results.csv', 'r') as theFile: 
+with open('Method2/Results.csv', 'r') as theFile: 
     reader = csv.DictReader(theFile)
     for line in reader: 
         patient_number_array.append(line['PATIENT_NUMBER'])
@@ -73,7 +53,6 @@ with open('Area\Results.csv', 'r') as theFile:
         patient_avg_peak_dist.append(avg_peak_dist)
         patient_determinator_1.append(float(avg_peak_dist)/float(num_peaks))
         patient_determinator_2.append(float(avg_peak_dist)*float(num_peaks))
-
    
 n = len(patient_number_array)
 
@@ -124,55 +103,6 @@ for i in range(0, n):
             patient_determinator_2[j] = patient_determinator_2[j+1]
             patient_determinator_2[j+1] = temp
 
-# new1_patient_time_array = patient_time_array.copy()
-# new1_patient_determinator_1 = patient_determinator_1.copy()
-# new1_patient_num_peaks = patient_num_peaks.copy()
-# new1_patient_avg_peak_dist = patient_avg_peak_dist.copy()
-# for i in range(0, n):
-#     for j in range(0, n-i-1):
-#         if new1_patient_determinator_1[j] > new1_patient_determinator_1[j+1]:
-#             temp = new1_patient_determinator_1[j]
-#             new1_patient_determinator_1[j] = new1_patient_determinator_1[j+1]
-#             new1_patient_determinator_1[j+1] = temp
-
-#             temp = new1_patient_time_array[j]
-#             new1_patient_time_array[j] = new1_patient_time_array[j+1]
-#             new1_patient_time_array[j+1] = temp
-
-#             temp = new1_patient_num_peaks[j]
-#             new1_patient_num_peaks[j] = new1_patient_num_peaks[j+1]
-#             new1_patient_num_peaks[j+1] = temp
-
-#             temp = new1_patient_avg_peak_dist[j]
-#             new1_patient_avg_peak_dist[j] = new1_patient_avg_peak_dist[j+1]
-#             new1_patient_avg_peak_dist[j+1] = temp
-
-# new2_patient_time_array = patient_time_array.copy()
-# new2_patient_determinator_2 = patient_determinator_2.copy()
-# new2_patient_num_peaks = patient_num_peaks.copy()
-# new2_patient_avg_peak_dist = patient_avg_peak_dist.copy()
-
-# for i in range(0, n):
-#     for j in range(0, n-i-1):
-#         if new2_patient_determinator_2[j] > new2_patient_determinator_2[j+1]:
-
-#             temp = new2_patient_determinator_2[j]
-#             new2_patient_determinator_2[j] = new2_patient_determinator_2[j+1]
-#             new2_patient_determinator_2[j+1] = temp
-
-#             temp = new2_patient_time_array[j]
-#             new2_patient_time_array[j] = new2_patient_time_array[j+1]
-#             new2_patient_time_array[j+1] = temp
-
-#             temp = new2_patient_num_peaks[j]
-#             new2_patient_num_peaks[j] = new2_patient_num_peaks[j+1]
-#             new2_patient_num_peaks[j+1] = temp
-
-#             temp = new2_patient_avg_peak_dist[j]
-#             new2_patient_avg_peak_dist[j] = new2_patient_avg_peak_dist[j+1]
-#             new2_patient_avg_peak_dist[j+1] = temp
-
-### THE BELOW CODE WORKS BUT ALSO LIKE WTF IT'S SO LONG
 D_patient_number_array_avg_std_dev = []
 D_patient_number_array_avg_std_dev.append(1)
 D_patient_counter_avg_std_dev = 0
@@ -305,8 +235,6 @@ ND_data_avg_std_dev = {'Patient': ND_patient_number_array_avg_std_dev, 'Before' 
 ND_df_avg_std_dev = pd.DataFrame(ND_data_avg_std_dev)
 ND_df_avg_std_dev.to_csv('RESULTS/ND_AvgStdDev.csv', index=False)
 
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 D_patient_number_array_avg_area_trapz = []
@@ -441,17 +369,6 @@ ND_data_avg_area_trapz = {'Patient': ND_patient_number_array_avg_area_trapz, 'Be
 ND_df_avg_area_trapz = pd.DataFrame(ND_data_avg_area_trapz)
 ND_df_avg_area_trapz.to_csv('RESULTS/ND_AreaTrapz.csv', index=False)
 
-
-
-
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# WE ARE LOOKING HERE NOW! 
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 D_patient_number_array_det_2 = []
@@ -591,15 +508,7 @@ ND_data_det_2 = {'Patient': ND_patient_number_array_det_2, 'Before' : ND_time_be
 ND_df_det_2 = pd.DataFrame(ND_data_det_2)
 ND_df_det_2.to_csv('RESULTS/ND_Determinant2.csv', index=False)
 
-
-
-
-
-
-
-
-
-# - - - - - - - - - - - - - - - - - - - - - - - - GRAPHS 
+# GRAPHS - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
 def checkImproved(before, arr):
     improved = 0
     both = 0
@@ -658,14 +567,6 @@ ND_avg_diff_improved = [ND_avg_diff_improved_1W, ND_avg_diff_improved_1M, ND_avg
 
 avg_total_num = [(D_both_1W+ND_both_1W)/2, (D_both_1M+ND_both_1M)/2, (D_both_3M+ND_both_3M)/2, (D_both_6M+ND_both_6M)/2, (D_both_1Y+ND_both_1Y)/2, (D_both_2Y+ND_both_2Y)/2, (D_both_3Y+ND_both_3Y)/2, (D_both_4Y+ND_both_4Y)/2]
 
-
-
-
-
-
-
-
-
 D_both_1W_AVG_AREA, D_improved_1W_AVG_AREA, D_avg_amount_1W_AVG_AREA, D_avg_diff_1W_AVG_AREA, D_avg_diff_improved_1W_AVG_AREA = checkImproved(D_time_before_avg_area_trapz, D_time_1W_avg_area_trapz)
 D_both_1M_AVG_AREA, D_improved_1M_AVG_AREA, D_avg_amount_1M_AVG_AREA, D_avg_diff_1M_AVG_AREA, D_avg_diff_improved_1M_AVG_AREA = checkImproved(D_time_before_avg_area_trapz, D_time_1M_avg_area_trapz)
 D_both_3M_AVG_AREA, D_improved_3M_AVG_AREA, D_avg_amount_3M_AVG_AREA, D_avg_diff_3M_AVG_AREA, D_avg_diff_improved_3M_AVG_AREA = checkImproved(D_time_before_avg_area_trapz, D_time_3M_avg_area_trapz)
@@ -684,23 +585,8 @@ ND_both_2Y_AVG_AREA, ND_improved_2Y_AVG_AREA, ND_avg_amount_2Y_AVG_AREA, ND_avg_
 ND_both_3Y_AVG_AREA, ND_improved_3Y_AVG_AREA, ND_avg_amount_3Y_AVG_AREA, ND_avg_diff_3Y_AVG_AREA, ND_avg_diff_improved_3Y_AVG_AREA = checkImproved(ND_time_before_avg_area_trapz, ND_time_3Y_avg_area_trapz)
 ND_both_4Y_AVG_AREA, ND_improved_4Y_AVG_AREA, ND_avg_amount_4Y_AVG_AREA, ND_avg_diff_4Y_AVG_AREA, ND_avg_diff_improved_4Y_AVG_AREA = checkImproved(ND_time_before_avg_area_trapz, ND_time_4Y_avg_area_trapz)
 
-
 D_improved_percentage_AVG_AREA = [D_improved_1W_AVG_AREA/D_both_1W_AVG_AREA*100, D_improved_1M_AVG_AREA/D_both_1M_AVG_AREA*100, D_improved_3M_AVG_AREA/D_both_3M_AVG_AREA*100, D_improved_6M_AVG_AREA/D_both_6M_AVG_AREA*100, D_improved_1Y_AVG_AREA/D_both_1Y_AVG_AREA*100, D_improved_2Y_AVG_AREA/D_both_2Y_AVG_AREA*100, D_improved_3Y_AVG_AREA/D_both_3Y_AVG_AREA*100, D_improved_4Y_AVG_AREA/D_both_4Y_AVG_AREA*100]
 ND_improved_percentage_AVG_AREA = [ND_improved_1W_AVG_AREA/ND_both_1W_AVG_AREA*100, ND_improved_1M_AVG_AREA/ND_both_1M_AVG_AREA*100, ND_improved_3M_AVG_AREA/ND_both_3M_AVG_AREA*100, ND_improved_6M_AVG_AREA/ND_both_6M_AVG_AREA*100, ND_improved_1Y_AVG_AREA/ND_both_1Y_AVG_AREA*100, ND_improved_2Y_AVG_AREA/ND_both_2Y_AVG_AREA*100, ND_improved_3Y_AVG_AREA/ND_both_3Y_AVG_AREA*100, ND_improved_4Y_AVG_AREA/ND_both_4Y_AVG_AREA*100]
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 ## GENERAL GRAPH SETTINGS
 plt.rcParams["font.family"] = "Times New Roman"
@@ -729,7 +615,6 @@ ax2.set_ylim(0, 100)
 print("AVERAGE PEAK DISTANCE DOMINANT: " + str(np.average(D_improved_percentage)))
 print("AVERAGE PEAK DISTANCE NON-DOMINANT: " + str(np.average(ND_improved_percentage)))
 plt.savefig('RESULTS\GRAPHS\PercentageOfPatients_Det2.png', bbox_inches='tight', dpi=150)
-## END OF GRAPH 1: PERCENTAGE OF PATIENTS WITH TREMOR BEFORE TREATMENT THAT IMPROVED AFTER VARIOUS TREATMENT TIMES
 
 ## GRAPH 2: PERCENTAGE OF PATIENTS WITH TREMOR BEFORE TREATMENT THAT IMPROVED AFTER VARIOUS TREATMENT TIMES
 fig, ax1 = plt.subplots(figsize = (8,4))
@@ -742,46 +627,9 @@ ax1.set_ylabel('Difference in Tremor')
 ax1.legend(['Treated Hand', 'Untreated Hand'], loc="upper right")
 ax1.set_xlabel('Time')
 
-# ax1.set_ylim(0, 100)
-# ax2 = ax1.twinx()
-# ax2.plot(x, D_num_improved, color = 'red')
-# ax2.plot(x, ND_num_improved, color = 'green')
-# ax2.set_ylabel('Number of patients total')
-# ax2.legend(['Treated Hand', 'Non-Treated Hand'], loc="upper center")
-# ax2.set_ylim(0, 100)
 plt.xticks(x_axis, x)
 plt.tight_layout()
-
 plt.show()
-
-## GRAPH: PERCENTAGE OF PATIENTS WITH TREMOR BEFORE TREATMENT THAT IMPROVED AFTER VARIOUS TREATMENT TIMES
-
-# plt.rcParams["font.family"] = "Times New Roman"
-# plt.rc('axes', axisbelow=True)
-# plt.rcParams.update({'font.size': 12})
-
-# plt_1 = plt.figure(figsize=(8, 4))
-
-# plt.grid(linestyle = '-', linewidth=0.5, axis='y')
-# plt.title('Percentage of Patients with Tremor Before Treatment that Improved \nAfter Various Treatment Times')
-
-# x = ['1W', '1M', '3M', '6M', '1Y', '2Y', '3Y', '4Y']
-# x_axis = np.arange(len(x))
-
-# # plt.bar(x_axis - 0.15, D_improved_percentage, 0.3, label = 'Treated Hand', color = 'darkblue')
-# # plt.bar(x_axis + 0.15, ND_improved_percentage, 0.3, label = 'Non-Treated Hand', color = 'cornflowerblue')
-
-# plt.bar(x_axis - 0.15, D_num_improved, 0.3, label = 'Treated Hand', color = 'darkblue')
-# plt.bar(x_axis + 0.15, ND_num_improved, 0.3, label = 'Non-Treated Hand', color = 'cornflowerblue')
-
-
-# plt.xticks(x_axis, x)
-
-# plt.xlabel('Time')
-# plt.ylabel('Percentage that Improved')
-# plt.legend()
-# plt.show()
-
 
 ## GRAPH 3: PERCENTAGE OF PATIENTS WITH TREMOR BEFORE TREATMENT THAT IMPROVED AFTER VARIOUS TREATMENT TIMES - AVG AREA
 x = ['1W', '1M', '3M', '6M', '1Y', '2Y', '3Y', '4Y']
@@ -806,35 +654,18 @@ plt.rcParams["figure.figsize"] = (8,4)
 print("AVERAGE AREA METHOD DOM: " + str(np.average(D_improved_percentage_AVG_AREA)))
 print("AVERAGE AREA METHOD NON-DOM: " + str(np.average(ND_improved_percentage_AVG_AREA)))
 plt.savefig('RESULTS\GRAPHS\PercentageOfPatients_AvgArea.png', bbox_inches='tight', dpi=150)
-## GRAPH 1: PERCENTAGE OF PATIENTS WITH TREMOR BEFORE TREATMENT THAT IMPROVED AFTER VARIOUS TREATMENT TIMES
 
-
-# # - - - - - - - - - - - - - - - - - - - - - - - - END OF GRAPHS 
-
-
-
-
-
-
-
-
-
-
-
-
-# # - - - - - - - - - - - - - - - - - - - - - - - - START OF "WHICH HAND?"
+# START OF "WHICH HAND?" ONE
 combined_improved_array = []
 which_hand = []
 combined_patient_number_array = []
 dominant_hand = []
-
 longest_array = 0
 
 if len(D_patient_number_array_det_2) > len(ND_patient_number_array_det_2): 
     longest_array = len(D_patient_number_array_det_2)
 else:
     longest_array = len(ND_patient_number_array_det_2)
-
 
 D_counter = -1
 ND_counter = -1
@@ -976,8 +807,6 @@ for i in range(0, longest_array):
         ND_y_array_max = max(temp_ND_y_array)
         temp_ND_y_array = temp_ND_y_array/ND_y_array_max*100
 
-        # if D_time_before_det_2[D_counter] < 600 and ND_time_before_det_2[ND_counter] < 600: # To remove one outlier     
-
         if D_gradient < 0 and ND_gradient < 0: 
             combined_improved_array.append('BOTH')
             if D_gradient < ND_gradient: 
@@ -1006,34 +835,10 @@ for i in range(0, longest_array):
             else:
                 which_hand.append('NON-TREATED')
 
-
-        
-        # plt.title('Results of the Treated-Hand of Patients with more than Four Data Entries')
-        # plt.grid(linestyle = '-', linewidth=0.5, axis='y')
-
-        # plt.xticks([1,2,3,4,5,6,7,8,9], ['Before', '1W', '1M', '3M', '6M', '1Y', '2Y', '3Y', '4Y'])
-
-        # ax1_ALLPATIENTS.plot(D_x_array_linear, D_y_array)
-
-
-        # ax1_ALLPATIENTS.bar(x_axis - 0.15, D_improved_percentage, 0.3, label = 'Treated Hand', color = 'darkblue')
-        # ax1_ALLPATIENTS.bar(x_axis + 0.15, ND_improved_percentage, 0.3, label = 'Treated Hand', color = 'cornflowerblue')
-        # ax1_ALLPATIENTS.set_ylabel('Percentage of patients that improved')
-        # ax1_ALLPATIENTS.legend(['Treated Hand', 'Non-Treated Hand'], loc="upper right")
-        # ax1_ALLPATIENTS.set_ylim(0, 100)
-        # ax2_ALLPATIENTS = ax1_ALLPATIENTS.twinx()
-        # ax2_ALLPATIENTS.plot(x, avg_total_num, color = 'red')
-        # ax2_ALLPATIENTS.set_ylabel('Number of patients total')
-        # ax2_ALLPATIENTS.legend(['Number of patients'], loc="upper center")
-        # ax2_ALLPATIENTS.set_ylim(0, 100)
-
 plt.tight_layout()
-
 plt.show()
 
-
-
-# # - - - - - - - - - - - - - - - - - - - - - - - - START OF "WHICH HAND?" TWO
+# START OF "WHICH HAND?" TWO
 combined_improved_array = []
 which_hand = []
 combined_patient_number_array = []
@@ -1045,7 +850,6 @@ if len(D_patient_number_array_det_2) > len(ND_patient_number_array_det_2):
     longest_array = len(D_patient_number_array_det_2)
 else:
     longest_array = len(ND_patient_number_array_det_2)
-
 
 D_counter = -1
 ND_counter = -1
@@ -1094,7 +898,6 @@ for i in range(0, longest_array):
     D_x_array = []
     D_x_array_linear = []
     D_y_array = []
-
     
     if D_time_before_det_2[D_counter] != 0 and D_time_before_det_2[D_counter] != -1:
         D_y_array.append(D_time_before_det_2[D_counter])
@@ -1173,8 +976,6 @@ for i in range(0, longest_array):
             ND_y_array.append(ND_time_4Y_det_2[ND_counter])
             ND_x_array.append(_4Y)
             ND_x_array_linear.append(_4Y_linear)
-
-
         
     if len(D_x_array) > 4 and len(D_y_array) > 4 and len(ND_x_array) > 4 and len(ND_y_array) > 4:
 
@@ -1204,7 +1005,6 @@ for i in range(0, longest_array):
                     if ND_y_array[0] == ND_y_array_max:                   
                         ax1_ALLPATIENTS2.plot(ND_x_array_linear, ND_y_array)
 
-
             elif D_gradient < 0: 
                 combined_improved_array.append('TREATED')
                 which_hand.append('TREATED')
@@ -1224,12 +1024,9 @@ for i in range(0, longest_array):
                 else:
                     which_hand.append('NON-TREATED')
 plt.tight_layout()
-
 plt.show()
 
-
-# # - - - - - - - - - - - - - - - - - - - - - - - - START OF "WHICH HAND?" THREE
-
+# START OF "WHICH HAND?" THREE
 x_array = [1,2,3,4,5,6,7,8,9]
 fig_ALLPATIENTS3, ax1_ALLPATIENTS3 = plt.subplots(figsize = (8,4))
 plt.title('Average Tremor Severities for Each Hand\nPEAK DISTANCE (METHOD 2B)')
@@ -1268,7 +1065,7 @@ ax1_ALLPATIENTS3.legend(['Treated Hand', 'Untreated Hand'], loc="upper right")
 plt.tight_layout()
 plt.show()
 
-# LOOK HERE AVERAGE TREMOR SEVERITY USING AVG AREA TRAPZ METHOD
+# AVERAGE TREMOR SEVERITY USING AVG AREA TRAPZ METHOD
 x_array = [1,2,3,4,5,6,7,8,9]
 fig_ALLPATIENTS3B, ax1_ALLPATIENTS3B = plt.subplots(figsize = (8,4))
 plt.title('Average Tremor Severities for Each Hand\nAVERAGE AREA (METHOD 2A)')
@@ -1307,17 +1104,9 @@ ax1_ALLPATIENTS3B.legend(['Treated Hand', 'Untreated Hand'], loc="upper right")
 plt.savefig('RESULTS\GRAPHS\AverageTremSev_AvgArea.png', bbox_inches='tight', dpi=150)
 
 plt.tight_layout()
-
 plt.show()
 
-
-
-
-
-
-
-
-# # - - - - - - - - - - - - - - - - - - - - - - - - START OF "WHICH HAND?" FOUR
+# START OF "WHICH HAND?" FOUR
 
 x_array = [1,2,3,4,5,6,7,8,9]
 fig_ALLPATIENTS4, ax1_ALLPATIENTS4 = plt.subplots(figsize = (8,4))
@@ -1326,12 +1115,9 @@ plt.grid(linestyle = '-', linewidth=0.5, axis='y')
 plt.xticks(x_array, ['Before', '1W', '1M', '3M', '6M', '1Y', '2Y', '3Y', '4Y'])
 
 all_arrays = [*D_time_before_det_2, *D_time_1W_det_2, *D_time_1M_det_2, *D_time_3M_det_2, *D_time_6M_det_2, *D_time_1Y_det_2, *D_time_2Y_det_2, *D_time_3Y_det_2, *D_time_4Y_det_2, *ND_time_before_det_2, *ND_time_1W_det_2, *ND_time_1M_det_2, *ND_time_3M_det_2, *ND_time_6M_det_2, *ND_time_1Y_det_2, *ND_time_2Y_det_2, *ND_time_3Y_det_2, *ND_time_4Y_det_2]
-# all_max_array = [max(D_time_before_det_2), max(D_time_1W_det_2), max(D_time_1M_det_2), max(D_time_3M_det_2), max(D_time_6M_det_2), max(D_time_1Y_det_2), max(D_time_2Y_det_2), max(D_time_3Y_det_2), max(D_time_4Y_det_2), max(*ND_time_before_det_2), max(*ND_time_1W_det_2), max(*ND_time_1M_det_2), max(ND_time_3M_det_2), max(ND_time_6M_det_2), max(ND_time_1Y_det_2), max(ND_time_2Y_det_2), max(ND_time_3Y_det_2), max(ND_time_4Y_det_2)]
 all_min, q10, q90, q95, q98, q999, all_max = np.quantile(all_arrays, [0, 0.1, 0.9, 0.95, 0.98, 0.99, 1])
 denom = q95 - all_min
 
-
-# (x-min)/(max-min)
 D_time_before_normalised = [(x - all_min)/denom for x in D_time_before_det_2]
 D_time_1W_normalised = [(x - all_min)/denom for x in D_time_1W_det_2]
 D_time_1M_normalised = [(x - all_min)/denom for x in D_time_1M_det_2]
@@ -1377,7 +1163,6 @@ ND_average_4Y_det_2 = np.mean(ND_time_4Y_normalised)
 D_averages = [D_average_before_det_2, D_average_1W_det_2, D_average_1M_det_2, D_average_3M_det_2, D_average_6M_det_2, D_average_1Y_det_2, D_average_2Y_det_2, D_average_3Y_det_2, D_average_4Y_det_2]
 ND_averages = [ND_average_before_det_2, ND_average_1W_det_2, ND_average_1M_det_2, ND_average_3M_det_2, ND_average_6M_det_2, ND_average_1Y_det_2, ND_average_2Y_det_2, ND_average_3Y_det_2, ND_average_4Y_det_2]
 
-
 plt.legend()
 ax1_ALLPATIENTS4.plot(x_array, D_averages, color = 'darkblue')
 ax1_ALLPATIENTS4.plot(x_array, ND_averages, color = 'cornflowerblue')
@@ -1387,16 +1172,7 @@ ax1_ALLPATIENTS4.legend(['Treated Hand', 'Untreated Hand'], loc="upper right", p
 plt.savefig('RESULTS\GRAPHS\AverageTremSev_Det2.png', bbox_inches='tight', dpi=150)
 plt.show()
 
-
-
-
-
-
-
-
-
-# # - - - - - - - - - - - - - - - - - - - - - - - - START OF "WHICH HAND?" FOURB
-
+# START OF "WHICH HAND?" FOUR B
 x_array = [1,2,3,4,5,6,7,8,9]
 fig_ALLPATIENTS4B, ax1_ALLPATIENTS4B = plt.subplots(figsize = (8,4))
 plt.title('Normalised Average Tremor Severities for Each Hand\nAVERAGE AREA (METHOD 2A)')
@@ -1407,8 +1183,6 @@ all_arrays = [*([abs(float(x)) for x in D_time_before_avg_area_trapz]),*([abs(fl
 all_min, q10, q90, q95, q98, q999, all_max = np.quantile(all_arrays, [0, 0.1, 0.9, 0.95, 0.98, 0.99, 1])
 denom = q95 - all_min
 
-
-# (x-min)/(max-min)
 D_time_before_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in D_time_before_avg_area_trapz]]
 D_time_1W_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in  D_time_1W_avg_area_trapz]]
 D_time_1M_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in D_time_1M_avg_area_trapz]]
@@ -1454,7 +1228,6 @@ ND_average_4Y_det_2 = np.mean(ND_time_4Y_normalised)
 D_averages = [D_average_before_det_2, D_average_1W_det_2, D_average_1M_det_2, D_average_3M_det_2, D_average_6M_det_2, D_average_1Y_det_2, D_average_2Y_det_2, D_average_3Y_det_2, D_average_4Y_det_2]
 ND_averages = [ND_average_before_det_2, ND_average_1W_det_2, ND_average_1M_det_2, ND_average_3M_det_2, ND_average_6M_det_2, ND_average_1Y_det_2, ND_average_2Y_det_2, ND_average_3Y_det_2, ND_average_4Y_det_2]
 
-
 plt.legend()
 ax1_ALLPATIENTS4B.plot(x_array, D_averages, color = 'darkblue')
 ax1_ALLPATIENTS4B.plot(x_array, ND_averages, color = 'cornflowerblue')
@@ -1462,122 +1235,6 @@ ax1_ALLPATIENTS4B.set_ylabel('Tremor Severity')
 ax1_ALLPATIENTS4B.set_xlabel('Time')
 ax1_ALLPATIENTS4B.legend(['Treated Hand', 'Untreated Hand'], loc="upper right", prop={'size': 14})
 plt.savefig('RESULTS\GRAPHS\AverageTremSev_AvgArea.png', bbox_inches='tight', dpi=150)
-
 plt.show()
 
-
-
-
-
-
-
-
-
-# # TO NORMALISE THE RESULTS, USE THE BELOW CODE
-# D_normalised_time_before = []
-# D_normalised_time_1W = []
-# D_normalised_time_1M = []
-# D_normalised_time_3M = []
-# D_normalised_time_6M = []
-# D_normalised_time_1Y = []
-# D_normalised_time_2Y = []
-# D_normalised_time_3Y = []
-# D_normalised_time_4Y = []
-
-# ND_normalised_time_before = []
-# ND_normalised_time_1W = []
-# ND_normalised_time_1M = []
-# ND_normalised_time_3M = []
-# ND_normalised_time_6M = []
-# ND_normalised_time_1Y = []
-# ND_normalised_time_2Y = []
-# ND_normalised_time_3Y = []
-# ND_normalised_time_4Y = []
-
-# denominator = float(max_det)-float(min_det)
-# (x-min)/(max-min)
-# for i in range(0, D_patient_counter+1):
-#     if D_time_before[i] != 0:
-#         D_normalised_time_before.append((float(D_time_before[i])-float(min_det))/denominator)
-#     else:
-#         D_normalised_time_before.append(0)
-#     if D_time_1W[i] != 0:
-#         D_normalised_time_1W.append((float(D_time_1W[i])-float(min_det))/denominator)
-#     else:
-#         D_normalised_time_1W.append(0)
-#     if D_time_1M[i] != 0:
-#         D_normalised_time_1M.append((float(D_time_1M[i])-float(min_det))/denominator)
-#     else:
-#         D_normalised_time_1M.append(0)
-#     if D_time_3M[i] != 0:
-#         D_normalised_time_3M.append((float(D_time_3M[i])-float(min_det))/denominator)
-#     else:
-#         D_normalised_time_3M.append(0)
-#     if D_time_6M[i] != 0:
-#         D_normalised_time_6M.append((float(D_time_6M[i])-float(min_det))/denominator)
-#     else:
-#         D_normalised_time_6M.append(0)
-#     if D_time_1Y[i] != 0:
-#         D_normalised_time_1Y.append((float(D_time_1Y[i])-float(min_det))/denominator)
-#     else:
-#         D_normalised_time_1Y.append(0)
-#     if D_time_2Y[i] != 0:
-#         D_normalised_time_2Y.append((float(D_time_2Y[i])-float(min_det))/denominator)
-#     else:
-#         D_normalised_time_2Y.append(0)
-#     if D_time_3Y[i] != 0:
-#         D_normalised_time_3Y.append((float(D_time_3Y[i])-float(min_det))/denominator)
-#     else:
-#         D_normalised_time_3Y.append(0)
-#     if D_time_4Y[i] != 0:
-#         D_normalised_time_4Y.append((float(D_time_4Y[i])-float(min_det))/denominator)
-#     else:
-#         D_normalised_time_4Y.append(0)
-
-
-# data_normalised = {'Patient': D_patient_number_array, 'Before' : D_normalised_time_before, '1 Week' : D_normalised_time_1W, '1 Month' : D_normalised_time_1M, '3 Months': D_normalised_time_3M, '6 Months': D_normalised_time_6M, '1 Year': D_normalised_time_1Y, '2 Years': D_normalised_time_2Y, '3 Years': D_normalised_time_3Y, '4 Years': D_normalised_time_4Y }
-# df_normalised = pd.DataFrame(data_normalised)
-# df_normalised.to_csv('RESULTS\D_Determinant2_NORMALIZED.csv', index=False)
-
-# for i in range(0, ND_patient_counter+1):
-#     if ND_time_before[i] != 0:
-#         ND_normalised_time_before.append((float(ND_time_before[i])-float(min_det))/denominator)
-#     else:
-#         ND_normalised_time_before.append(0)
-#     if ND_time_1W[i] != 0:
-#         ND_normalised_time_1W.append((float(ND_time_1W[i])-float(min_det))/denominator)
-#     else:
-#         ND_normalised_time_1W.append(0)
-#     if ND_time_1M[i] != 0:
-#         ND_normalised_time_1M.append((float(ND_time_1M[i])-float(min_det))/denominator)
-#     else:
-#         ND_normalised_time_1M.append(0)
-#     if ND_time_3M[i] != 0:
-#         ND_normalised_time_3M.append((float(ND_time_3M[i])-float(min_det))/denominator)
-#     else:
-#         ND_normalised_time_3M.append(0)
-#     if ND_time_6M[i] != 0:
-#         ND_normalised_time_6M.append((float(ND_time_6M[i])-float(min_det))/denominator)
-#     else:
-#         ND_normalised_time_6M.append(0)
-#     if ND_time_1Y[i] != 0:
-#         ND_normalised_time_1Y.append((float(ND_time_1Y[i])-float(min_det))/denominator)
-#     else:
-#         ND_normalised_time_1Y.append(0)
-#     if ND_time_2Y[i] != 0:
-#         ND_normalised_time_2Y.append((float(ND_time_2Y[i])-float(min_det))/denominator)
-#     else:
-#         ND_normalised_time_2Y.append(0)
-#     if ND_time_3Y[i] != 0:
-#         ND_normalised_time_3Y.append((float(ND_time_3Y[i])-float(min_det))/denominator)
-#     else:
-#         ND_normalised_time_3Y.append(0)
-#     if ND_time_4Y[i] != 0:
-#         ND_normalised_time_4Y.append((float(ND_time_4Y[i])-float(min_det))/denominator)
-#     else:
-#         ND_normalised_time_4Y.append(0)
-
-
-# data_normalised = {'Patient': ND_patient_number_array, 'Before' : ND_normalised_time_before, '1 Week' : ND_normalised_time_1W, '1 Month' : ND_normalised_time_1M, '3 Months': ND_normalised_time_3M, '6 Months': ND_normalised_time_6M, '1 Year': ND_normalised_time_1Y, '2 Years': ND_normalised_time_2Y, '3 Years': ND_normalised_time_3Y, '4 Years': ND_normalised_time_4Y }
-# df_normalised = pd.DataFrame(data_normalised)
-# df_normalised.to_csv('RESULTS/ND_Determinant2_NORMALIZED.csv', index=False)
+# END OF CODE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
