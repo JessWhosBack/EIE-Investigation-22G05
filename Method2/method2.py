@@ -188,7 +188,7 @@ for image_counter, image in enumerate(image_array):
     results_array[image_counter][Results.PD_HAND.value] = image_PD_hand[image_counter]
 
     coordinates = np.argwhere(image < 0.9)
-    fig, (axs_original, axs_fft, axs_ifft, axs_area) = plt.subplots(4)
+    # fig, (axs_original, axs_fft, axs_ifft, axs_area) = plt.subplots(4)
 
     try:
         # NOTE: The horizontal axis is denoted by y, and the vertical axis is denoted by x - No, this was not on purpose. Yes, it's an absolute pain.
@@ -211,12 +211,12 @@ for image_counter, image in enumerate(image_array):
                     y[j+1] = temp_y
 
         # GRAPH 1: ORIGINAL 
-        axs_original.set_title("ORIGINAL GRAPH: " + str(temp_title))  
-        axs_original.plot(y, x)
+        # axs_original.set_title("ORIGINAL GRAPH: " + str(temp_title))  
+        # axs_original.plot(y, x)
 
         average_x = np.mean(x)  
         new_array_x = []
-        new_array_x_ABS = []
+        # new_array_x_ABS = []
         new_array_y = []
 
         # Take the absolute value and shift the points down to be centered around the horizontal axis
@@ -224,13 +224,6 @@ for image_counter, image in enumerate(image_array):
             new_array_y.append(y[i])
             new_array_x.append(x[i]-average_x)
             
-            # Use the below code to shift the points down to be centered around the horizontal axis AND be the absolute version of the graph
-            if x[i] < average_x: 
-                c = 3
-                new_array_x_ABS.append(average_x - x[i])
-            else:
-                new_array_x_ABS.append(x[i] - average_x)
-
         data_step = 0.1
         n = len(new_array_y)
         yf = rfft(new_array_x)
@@ -239,10 +232,10 @@ for image_counter, image in enumerate(image_array):
         yf_abs = np.abs(yf)
         yf_max = np.max(yf_abs)
 
-        # GRAPH 2: FFT
-        axs_fft.set_title("FFT: " + str(temp_title))  
-        axs_fft.plot(xf, yf_abs)
-        axs_fft.set_xlim(0, 0.5)
+        # # GRAPH 2: FFT
+        # axs_fft.set_title("FFT: " + str(temp_title))  
+        # axs_fft.plot(xf, yf_abs)
+        # axs_fft.set_xlim(0, 0.5)
         
         multiplier = 5
         MIN_multiplier = 5
@@ -261,19 +254,19 @@ for image_counter, image in enumerate(image_array):
 
             multiplier = multiplier+5
 
-        # GRAPH 3: IFFT
-        axs_ifft.set_title("IFFT: " + str(temp_title))  
-        axs_ifft.plot(new_array_y, new_array_x)
+        # # GRAPH 3: IFFT
+        # axs_ifft.set_title("IFFT: " + str(temp_title))  
+        # axs_ifft.plot(new_array_y, new_array_x)
 
-        if len(new_array_y) > len(new_f_clean):
-            new_new_array_y = new_array_y
-            new_new_array_y.pop(0)
-            axs_ifft.plot(new_new_array_y, new_f_clean)
-        else:
-            axs_ifft.plot(new_array_y, new_f_clean)
+        # if len(new_array_y) > len(new_f_clean):
+        #     new_new_array_y = new_array_y
+        #     new_new_array_y.pop(0)
+        #     axs_ifft.plot(new_new_array_y, new_f_clean)
+        # else:
+        #     axs_ifft.plot(new_array_y, new_f_clean)
 
-        axs_ifft.set_xlim(0, 600)
-        axs_ifft.set_ylim(-20, 20)
+        # axs_ifft.set_xlim(0, 600)
+        # axs_ifft.set_ylim(-20, 20)
         
         # Quantile values of the data
         min, q1, q2, q3, q90, max = np.quantile(new_array_x, [0, 0.25, 0.5, 0.75, 0.9, 1])
@@ -315,13 +308,15 @@ for image_counter, image in enumerate(image_array):
         average_peakmin_distance = np.mean(peakmin_distance_array)
 
         # METHOD: TRAPZ FORMULA (NUMPY)
+        new_array_x_ABS = [abs(x) for x in new_f_clean]
         total_area_trapz_x = trapz(new_array_x_ABS) # Area under the curve, using numpy's trapz formula
         
-        # GRAPH 4: AREA GRAPH
-        axs_area.set_title("AREA UNDER CURVE: " + str(temp_title))  
-        axs_area.fill_between(new_array_y, new_array_x_ABS, color="grey")
-        axs_area.plot(new_array_y, new_array_x_ABS)
-        axs_area.set_xlim(0, 600)
+        # # GRAPH 4: AREA GRAPH
+        # axs_area.set_title("AREA UNDER CURVE: " + str(temp_title))  
+        # axs_area.fill_between(new_array_y, new_array_x_ABS, color="grey")
+        # axs_area.plot(new_array_y, new_array_x_ABS)
+        # axs_area.set_xlim(0, 600)
+        # axs_area.set_ylim(0, 20)
 
         results_array[image_counter][Results.AREA_TRAPZ.value] = total_area_trapz_x
         results_array[image_counter][Results.MAX.value] = max
@@ -368,8 +363,8 @@ for image_counter, image in enumerate(image_array):
     except:
         print("ERROR: \t" + str(image_patient_number[image_counter]) + "\t -\t " + str(image_names[image_counter]))
 
-    plt.tight_layout()
-    plt.show()
+    # plt.tight_layout()
+    # plt.show()
 
 # SAVING THE DATA:
 table_columns = []

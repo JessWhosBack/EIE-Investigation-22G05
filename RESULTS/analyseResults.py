@@ -1168,6 +1168,7 @@ ax1_ALLPATIENTS4.plot(x_array, D_averages, color = 'darkblue')
 ax1_ALLPATIENTS4.plot(x_array, ND_averages, color = 'cornflowerblue')
 ax1_ALLPATIENTS4.set_ylabel('Tremor Severity')
 ax1_ALLPATIENTS4.set_xlabel('Time')
+
 ax1_ALLPATIENTS4.legend(['Treated Hand', 'Untreated Hand'], loc="upper right", prop={'size': 14})
 plt.savefig('RESULTS\GRAPHS\AverageTremSev_Det2.png', bbox_inches='tight', dpi=150)
 plt.show()
@@ -1179,31 +1180,154 @@ plt.title('Normalised Average Tremor Severities for Each Hand\nAVERAGE AREA (MET
 plt.grid(linestyle = '-', linewidth=0.5, axis='y')
 plt.xticks(x_array, ['Before', '1W', '1M', '3M', '6M', '1Y', '2Y', '3Y', '4Y'])
 
-all_arrays = [*([abs(float(x)) for x in D_time_before_avg_area_trapz]),*([abs(float(x)) for x in D_time_1W_avg_area_trapz]),*([abs(float(x)) for x in D_time_1M_avg_area_trapz]),*([abs(float(x)) for x in D_time_3M_avg_area_trapz]),*([abs(float(x)) for x in D_time_6M_avg_area_trapz]),*([abs(float(x)) for x in D_time_1Y_avg_area_trapz]),*([abs(float(x)) for x in D_time_2Y_avg_area_trapz]),*([abs(float(x)) for x in D_time_3Y_avg_area_trapz]),*([abs(float(x)) for x in D_time_4Y_avg_area_trapz]),*([abs(float(x)) for x in ND_time_before_avg_area_trapz]),*([abs(float(x)) for x in ND_time_1W_avg_area_trapz]),*([abs(float(x)) for x in ND_time_1M_avg_area_trapz]),*([abs(float(x)) for x in ND_time_3M_avg_area_trapz]),*([abs(float(x)) for x in ND_time_6M_avg_area_trapz]),*([abs(float(x)) for x in ND_time_1Y_avg_area_trapz]),*([abs(float(x)) for x in ND_time_2Y_avg_area_trapz]),*([abs(float(x)) for x in ND_time_3Y_avg_area_trapz]),*([abs(float(x)) for x in ND_time_4Y_avg_area_trapz])]
-all_min, q10, q90, q95, q98, q999, all_max = np.quantile(all_arrays, [0, 0.1, 0.9, 0.95, 0.98, 0.99, 1])
-denom = q95 - all_min
 
-D_time_before_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in D_time_before_avg_area_trapz]]
-D_time_1W_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in  D_time_1W_avg_area_trapz]]
-D_time_1M_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in D_time_1M_avg_area_trapz]]
-D_time_3M_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in D_time_3M_avg_area_trapz]]
-D_time_6M_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in D_time_6M_avg_area_trapz]]
-D_time_1Y_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in D_time_1Y_avg_area_trapz]]
-D_time_2Y_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in D_time_2Y_avg_area_trapz]]
-D_time_3Y_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in D_time_3Y_avg_area_trapz]]
-D_time_4Y_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in D_time_4Y_avg_area_trapz]]
+copy_D_time_before_avg_area_trapz = [abs(float(x)) for x in D_time_before_avg_area_trapz]
+for c in copy_D_time_before_avg_area_trapz:
+    if c == 0.0:
+        copy_D_time_before_avg_area_trapz.remove(c)
+copy_D_time_1W_avg_area_trapz = [abs(float(x)) for x in D_time_1W_avg_area_trapz]
+for c in copy_D_time_1W_avg_area_trapz:
+    if c == 0.0:
+        copy_D_time_1W_avg_area_trapz.remove(c)
+copy_D_time_1M_avg_area_trapz = [abs(float(x)) for x in D_time_1M_avg_area_trapz]
+for c in copy_D_time_1M_avg_area_trapz:
+    if c == 0.0:
+        copy_D_time_1M_avg_area_trapz.remove(c)
+copy_D_time_3M_avg_area_trapz = [abs(float(x)) for x in D_time_3M_avg_area_trapz]
+for c in copy_D_time_3M_avg_area_trapz:
+    if c == 0.0:
+        copy_D_time_3M_avg_area_trapz.remove(c)
+copy_D_time_6M_avg_area_trapz = [abs(float(x)) for x in D_time_6M_avg_area_trapz]
+for c in copy_D_time_6M_avg_area_trapz:
+    if c == 0.0:
+        copy_D_time_6M_avg_area_trapz.remove(c)
+copy_D_time_1Y_avg_area_trapz = [abs(float(x)) for x in D_time_1Y_avg_area_trapz]
+for c in copy_D_time_1Y_avg_area_trapz:
+    if c == 0.0:
+        copy_D_time_1Y_avg_area_trapz.remove(c)
+copy_D_time_2Y_avg_area_trapz = [abs(float(x)) for x in D_time_2Y_avg_area_trapz]
+for c in copy_D_time_2Y_avg_area_trapz:
+    if c == 0.0:
+        copy_D_time_2Y_avg_area_trapz.remove(c)
+copy_D_time_3Y_avg_area_trapz = [abs(float(x)) for x in D_time_3Y_avg_area_trapz]
+for c in copy_D_time_3Y_avg_area_trapz:
+    if c == 0.0:
+        copy_D_time_3Y_avg_area_trapz.remove(c)
+copy_D_time_4Y_avg_area_trapz = [abs(float(x)) for x in D_time_4Y_avg_area_trapz]
+for c in copy_D_time_4Y_avg_area_trapz:
+    if c == 0.0:
+        copy_D_time_4Y_avg_area_trapz.remove(c)
+
+
+copy_ND_time_before_avg_area_trapz = [abs(float(x)) for x in ND_time_before_avg_area_trapz]
+for c in copy_ND_time_before_avg_area_trapz:
+    if c == 0.0:
+        copy_ND_time_before_avg_area_trapz.remove(c)
+copy_ND_time_1W_avg_area_trapz = [abs(float(x)) for x in ND_time_1W_avg_area_trapz]
+for c in copy_ND_time_1W_avg_area_trapz:
+    if c == 0.0:
+        copy_ND_time_1W_avg_area_trapz.remove(c)
+copy_ND_time_1M_avg_area_trapz = [abs(float(x)) for x in ND_time_1M_avg_area_trapz]
+for c in copy_ND_time_1M_avg_area_trapz:
+    if c == 0.0:
+        copy_ND_time_1M_avg_area_trapz.remove(c)
+copy_ND_time_3M_avg_area_trapz = [abs(float(x)) for x in ND_time_3M_avg_area_trapz]
+for c in copy_ND_time_3M_avg_area_trapz:
+    if c == 0.0:
+        copy_ND_time_3M_avg_area_trapz.remove(c)
+copy_ND_time_6M_avg_area_trapz = [abs(float(x)) for x in ND_time_6M_avg_area_trapz]
+for c in copy_ND_time_6M_avg_area_trapz:
+    if c == 0.0:
+        copy_ND_time_6M_avg_area_trapz.remove(c)
+copy_ND_time_1Y_avg_area_trapz = [abs(float(x)) for x in ND_time_1Y_avg_area_trapz]
+for c in copy_ND_time_1Y_avg_area_trapz:
+    if c == 0.0:
+        copy_ND_time_1Y_avg_area_trapz.remove(c)
+copy_ND_time_2Y_avg_area_trapz = [abs(float(x)) for x in ND_time_2Y_avg_area_trapz]
+for c in copy_ND_time_2Y_avg_area_trapz:
+    if c == 0.0:
+        copy_ND_time_2Y_avg_area_trapz.remove(c)
+copy_ND_time_3Y_avg_area_trapz = [abs(float(x)) for x in ND_time_3Y_avg_area_trapz]
+for c in copy_ND_time_3Y_avg_area_trapz:
+    if c == 0.0:
+        copy_ND_time_3Y_avg_area_trapz.remove(c)
+copy_ND_time_4Y_avg_area_trapz = [abs(float(x)) for x in ND_time_4Y_avg_area_trapz]
+for c in copy_ND_time_4Y_avg_area_trapz:
+    if c == 0.0:
+        copy_ND_time_4Y_avg_area_trapz.remove(c)
+
+print(copy_D_time_before_avg_area_trapz)
+print(copy_ND_time_before_avg_area_trapz)
+m1 = max(copy_D_time_before_avg_area_trapz)
+m2 = max(copy_D_time_1W_avg_area_trapz)
+m3 = max(copy_D_time_1M_avg_area_trapz)
+m4 = max(copy_D_time_3M_avg_area_trapz)
+m5 = max(copy_D_time_6M_avg_area_trapz)
+m6 = max(copy_D_time_1Y_avg_area_trapz )
+m7 = max(copy_D_time_2Y_avg_area_trapz )
+m8 = max(copy_D_time_3Y_avg_area_trapz )
+m9 = max(copy_D_time_4Y_avg_area_trapz )
+
+m10 = max(copy_ND_time_before_avg_area_trapz)
+m11 = max(copy_ND_time_1W_avg_area_trapz)
+m12 = max(copy_ND_time_1M_avg_area_trapz)
+m13 = max(copy_ND_time_3M_avg_area_trapz)
+m14 = max(copy_ND_time_6M_avg_area_trapz)
+m15 = max(copy_ND_time_1Y_avg_area_trapz)
+m16 = max(copy_ND_time_2Y_avg_area_trapz)
+m17 = max(copy_ND_time_3Y_avg_area_trapz)
+m18 = max(copy_ND_time_4Y_avg_area_trapz)
+
+m1 = min(copy_D_time_before_avg_area_trapz)
+m2 = min(copy_D_time_1W_avg_area_trapz)
+m3 = min(copy_D_time_1M_avg_area_trapz)
+m4 = min(copy_D_time_3M_avg_area_trapz)
+m5 = min(copy_D_time_6M_avg_area_trapz)
+m6 = min(copy_D_time_1Y_avg_area_trapz )
+m7 = min(copy_D_time_2Y_avg_area_trapz )
+m8 = min(copy_D_time_3Y_avg_area_trapz )
+m9 = min(copy_D_time_4Y_avg_area_trapz )
+
+m10 = min(copy_ND_time_before_avg_area_trapz)
+m11 = min(copy_ND_time_1W_avg_area_trapz)
+m12 = min(copy_ND_time_1M_avg_area_trapz)
+m13 = min(copy_ND_time_3M_avg_area_trapz)
+m14 = min(copy_ND_time_6M_avg_area_trapz)
+m15 = min(copy_ND_time_1Y_avg_area_trapz)
+m16 = min(copy_ND_time_2Y_avg_area_trapz)
+m17 = min(copy_ND_time_3Y_avg_area_trapz)
+m18 = min(copy_ND_time_4Y_avg_area_trapz)
+
+actual_max = max(m1, m2, m3, m4, m5, m6, m7, m8, m9, m11, m12, m13, m14, m15, m16, m17, m18)
+all_min = min(m1, m2, m3, m4, m5, m6, m7, m8, m9, m11, m12, m13, m14, m15, m16, m17, m18)
+
+# all_arrays = [*([abs(float(x)) for x in copy_D_time_before_avg_area_trapz]),*([abs(float(x)) for x in copy_D_time_1W_avg_area_trapz]),*([abs(float(x)) for x in copy_D_time_1M_avg_area_trapz]),*([abs(float(x)) for x in copy_D_time_3M_avg_area_trapz]),*([abs(float(x)) for x in copy_D_time_6M_avg_area_trapz]),*([abs(float(x)) for x in copy_D_time_1Y_avg_area_trapz]),*([abs(float(x)) for x in copy_D_time_2Y_avg_area_trapz]),*([abs(float(x)) for x in copy_D_time_3Y_avg_area_trapz]),*([abs(float(x)) for x in copy_D_time_4Y_avg_area_trapz]),*([abs(float(x)) for x in copy_ND_time_before_avg_area_trapz]),*([abs(float(x)) for x in copy_ND_time_1W_avg_area_trapz]),*([abs(float(x)) for x in copy_ND_time_1M_avg_area_trapz]),*([abs(float(x)) for x in copy_ND_time_3M_avg_area_trapz]),*([abs(float(x)) for x in copy_ND_time_6M_avg_area_trapz]),*([abs(float(x)) for x in copy_ND_time_1Y_avg_area_trapz]),*([abs(float(x)) for x in copy_ND_time_2Y_avg_area_trapz]),*([abs(float(x)) for x in copy_ND_time_3Y_avg_area_trapz]),*([abs(float(x)) for x in copy_ND_time_4Y_avg_area_trapz])]
+# all_min, q10, q90, q95, q98, q99, q999, all_max = np.quantile(all_arrays, [0, 0.1, 0.9, 0.95, 0.98, 0.99, 0.999, 1])
+
+# NB: BUG WARNING HERE - WHY IS MAX 0?
+denom = 50 # actual_max - all_min
+
+D_time_before_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in copy_D_time_before_avg_area_trapz]]
+D_time_1W_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in  copy_D_time_1W_avg_area_trapz]]
+D_time_1M_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in copy_D_time_1M_avg_area_trapz]]
+D_time_3M_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in copy_D_time_3M_avg_area_trapz]]
+D_time_6M_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in copy_D_time_6M_avg_area_trapz]]
+D_time_1Y_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in copy_D_time_1Y_avg_area_trapz]]
+D_time_2Y_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in copy_D_time_2Y_avg_area_trapz]]
+D_time_3Y_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in copy_D_time_3Y_avg_area_trapz]]
+D_time_4Y_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in copy_D_time_4Y_avg_area_trapz]]
 
 D_times_normalised = [D_time_before_normalised, D_time_1W_normalised, D_time_1M_normalised, D_time_3M_normalised, D_time_6M_normalised,  D_time_1Y_normalised, D_time_2Y_normalised, D_time_3Y_normalised, D_time_4Y_normalised]
 
-ND_time_before_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in ND_time_before_avg_area_trapz]]
-ND_time_1W_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in ND_time_1W_avg_area_trapz]]
-ND_time_1M_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in ND_time_1M_avg_area_trapz]]
-ND_time_3M_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in ND_time_3M_avg_area_trapz]]
-ND_time_6M_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in ND_time_6M_avg_area_trapz]]
-ND_time_1Y_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in ND_time_1Y_avg_area_trapz]]
-ND_time_2Y_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in ND_time_2Y_avg_area_trapz]]
-ND_time_3Y_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in ND_time_3Y_avg_area_trapz]]
-ND_time_4Y_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in ND_time_4Y_avg_area_trapz]]
+ND_time_before_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in copy_ND_time_before_avg_area_trapz]]
+ND_time_1W_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in copy_ND_time_1W_avg_area_trapz]]
+ND_time_1M_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in copy_ND_time_1M_avg_area_trapz]]
+ND_time_3M_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in copy_ND_time_3M_avg_area_trapz]]
+ND_time_6M_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in copy_ND_time_6M_avg_area_trapz]]
+ND_time_1Y_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in copy_ND_time_1Y_avg_area_trapz]]
+ND_time_2Y_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in copy_ND_time_2Y_avg_area_trapz]]
+ND_time_3Y_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in copy_ND_time_3Y_avg_area_trapz]]
+ND_time_4Y_normalised = [(x - all_min)/denom for x in [abs(float(x)) for x in copy_ND_time_4Y_avg_area_trapz]]
 
 D_average_before_det_2 = np.mean(D_time_before_normalised)
 D_average_1W_det_2 = np.mean(D_time_1W_normalised)
