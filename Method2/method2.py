@@ -216,7 +216,6 @@ for image_counter, image in enumerate(image_array):
 
         average_x = np.mean(x)  
         new_array_x = []
-        # new_array_x_ABS = []
         new_array_y = []
 
         # Take the absolute value and shift the points down to be centered around the horizontal axis
