@@ -583,9 +583,6 @@ for i in range(0, n):
         elif patient_time_array[i] == "4Y":
             ND_time_4Y_det_2[ND_patient_counter_det_2] = patient_determinator_2[i]
                 
-# print(max_det_2)
-# print(min_det_2)
-
 D_data_det_2 = {'Patient': D_patient_number_array_det_2, 'Before' : D_time_before_det_2, '1 Week' : D_time_1W_det_2, '1 Month' : D_time_1M_det_2, '3 Months': D_time_3M_det_2, '6 Months': D_time_6M_det_2, '1 Year': D_time_1Y_det_2, '2 Years': D_time_2Y_det_2, '3 Years':D_time_3Y_det_2, '4 Years':D_time_4Y_det_2 }
 D_df_det_2 = pd.DataFrame(D_data_det_2)
 D_df_det_2.to_csv('RESULTS/D_Determinant2.csv', index=False)
@@ -705,8 +702,6 @@ ND_improved_percentage_AVG_AREA = [ND_improved_1W_AVG_AREA/ND_both_1W_AVG_AREA*1
 
 
 
-# print("3Y: " + str(ND_avg_diff_3Y))
-
 ## GENERAL GRAPH SETTINGS
 plt.rcParams["font.family"] = "Times New Roman"
 plt.rc('axes', axisbelow=True)
@@ -716,7 +711,7 @@ plt.rcParams.update({'font.size': 16})
 x = ['1W', '1M', '3M', '6M', '1Y', '2Y', '3Y', '4Y']
 x_axis = np.arange(len(x))
 fig, ax1 = plt.subplots(figsize = (8,4))
-plt.title('Percentage of Patients with Tremor Before Treatment that Improved\nAfter Various Treatment Times - PEAK DISTANCE METHOD')
+plt.title('Percentage of Patients with Tremor Before Treatment that Improved\nAfter Various Treatment Times - PEAK DISTANCE (METHOD 2B)')
 plt.grid(linestyle = '-', linewidth=0.5, axis='y')
 plt.tight_layout()
 
@@ -731,7 +726,8 @@ ax2.plot(x, avg_total_num, color = 'red')
 ax2.set_ylabel('Number of Patients')
 ax2.legend(['Number of\npatients'], loc="upper center", prop={'size': 14})
 ax2.set_ylim(0, 100)
-print("AVERAGE: " + str(np.average(D_improved_percentage)))
+print("AVERAGE PEAK DISTANCE DOMINANT: " + str(np.average(D_improved_percentage)))
+print("AVERAGE PEAK DISTANCE NON-DOMINANT: " + str(np.average(ND_improved_percentage)))
 plt.savefig('RESULTS\GRAPHS\PercentageOfPatients_Det2.png', bbox_inches='tight', dpi=150)
 ## END OF GRAPH 1: PERCENTAGE OF PATIENTS WITH TREMOR BEFORE TREATMENT THAT IMPROVED AFTER VARIOUS TREATMENT TIMES
 
@@ -791,7 +787,7 @@ plt.show()
 x = ['1W', '1M', '3M', '6M', '1Y', '2Y', '3Y', '4Y']
 x_axis = np.arange(len(x))
 fig, ax1 = plt.subplots(figsize = (8,4))
-plt.title('Percentage of Patients with Tremor Before Treatment that Improved\nAfter Various Treatment Times - AVERAGE AREA METHOD')
+plt.title('Percentage of Patients with Tremor Before Treatment that Improved\nAfter Various Treatment Times - AVERAGE AREA (METHOD 2A)')
 plt.grid(linestyle = '-', linewidth=0.5, axis='y')
 plt.tight_layout()
 
@@ -807,7 +803,8 @@ ax2.set_ylabel('Number of Patients')
 ax2.legend(['Number of\npatients'], loc="upper center", prop={'size': 14})
 ax2.set_ylim(0, 100)
 plt.rcParams["figure.figsize"] = (8,4)
-print("AVERAGE: " + str(np.average(D_improved_percentage_AVG_AREA)))
+print("AVERAGE AREA METHOD DOM: " + str(np.average(D_improved_percentage_AVG_AREA)))
+print("AVERAGE AREA METHOD NON-DOM: " + str(np.average(ND_improved_percentage_AVG_AREA)))
 plt.savefig('RESULTS\GRAPHS\PercentageOfPatients_AvgArea.png', bbox_inches='tight', dpi=150)
 ## GRAPH 1: PERCENTAGE OF PATIENTS WITH TREMOR BEFORE TREATMENT THAT IMPROVED AFTER VARIOUS TREATMENT TIMES
 
@@ -967,9 +964,6 @@ for i in range(0, longest_array):
 
         D_gradient, D_intercept = np.polyfit(D_x_array, D_y_array, 1)
         ND_gradient, ND_intercept = np.polyfit(ND_x_array, ND_y_array, 1)
-
-        
-        # print(str(D_patient_number_array_det_2[D_counter]) + "\t" + str(i) + " - D_counter: " + str(D_counter) + "\tD: " + str(D_gradient) + "\tND_counter: " + str(ND_counter) + "\tND: " + str(ND_gradient))
 
         plt.title('Results of Patients\' Most Improved Hand')
         plt.grid(linestyle = '-', linewidth=0.5, axis='y')
@@ -1189,10 +1183,6 @@ for i in range(0, longest_array):
         D_gradient, D_intercept = np.polyfit(D_x_array, D_y_array, 1)
         ND_gradient, ND_intercept = np.polyfit(ND_x_array, ND_y_array, 1)
 
-        
-        # print(str(D_patient_number_array_det_2[D_counter]) + "\t" + str(i) + " - D_counter: " + str(D_counter) + "\tD: " + str(D_gradient) + "\tND_counter: " + str(ND_counter) + "\tND: " + str(ND_gradient))
-
-
         temp_D_y_array = np.array(D_y_array.copy())
         D_y_array_max = max(temp_D_y_array)
         temp_D_y_array = temp_D_y_array/D_y_array_max*100
@@ -1242,7 +1232,7 @@ plt.show()
 
 x_array = [1,2,3,4,5,6,7,8,9]
 fig_ALLPATIENTS3, ax1_ALLPATIENTS3 = plt.subplots(figsize = (8,4))
-plt.title('Average Tremor Severities for Each Hand\nPEAK DISTANCE METHOD')
+plt.title('Average Tremor Severities for Each Hand\nPEAK DISTANCE (METHOD 2B)')
 plt.grid(linestyle = '-', linewidth=0.5, axis='y')
 plt.xticks(x_array, ['Before', '1W', '1M', '3M', '6M', '1Y', '2Y', '3Y', '4Y'])
 
@@ -1276,13 +1266,12 @@ ax1_ALLPATIENTS3.set_ylabel('Tremor Severity')
 ax1_ALLPATIENTS3.set_xlabel('Time')
 ax1_ALLPATIENTS3.legend(['Treated Hand', 'Untreated Hand'], loc="upper right")
 plt.tight_layout()
-
 plt.show()
 
 # LOOK HERE AVERAGE TREMOR SEVERITY USING AVG AREA TRAPZ METHOD
 x_array = [1,2,3,4,5,6,7,8,9]
 fig_ALLPATIENTS3B, ax1_ALLPATIENTS3B = plt.subplots(figsize = (8,4))
-plt.title('Average Tremor Severities for Each Hand\nAVERAGE AREA TRAPZ METHOD')
+plt.title('Average Tremor Severities for Each Hand\nAVERAGE AREA (METHOD 2A)')
 plt.grid(linestyle = '-', linewidth=0.5, axis='y')
 plt.xticks(x_array, ['Before', '1W', '1M', '3M', '6M', '1Y', '2Y', '3Y', '4Y'])
 
@@ -1332,7 +1321,7 @@ plt.show()
 
 x_array = [1,2,3,4,5,6,7,8,9]
 fig_ALLPATIENTS4, ax1_ALLPATIENTS4 = plt.subplots(figsize = (8,4))
-plt.title('Normalised Average Tremor Severities for Each Hand\nPEAK DISTANCE METHOD')
+plt.title('Normalised Average Tremor Severities for Each Hand\nPEAK DISTANCE (METHOD 2B)')
 plt.grid(linestyle = '-', linewidth=0.5, axis='y')
 plt.xticks(x_array, ['Before', '1W', '1M', '3M', '6M', '1Y', '2Y', '3Y', '4Y'])
 
@@ -1396,7 +1385,6 @@ ax1_ALLPATIENTS4.set_ylabel('Tremor Severity')
 ax1_ALLPATIENTS4.set_xlabel('Time')
 ax1_ALLPATIENTS4.legend(['Treated Hand', 'Untreated Hand'], loc="upper right", prop={'size': 14})
 plt.savefig('RESULTS\GRAPHS\AverageTremSev_Det2.png', bbox_inches='tight', dpi=150)
-
 plt.show()
 
 
@@ -1411,7 +1399,7 @@ plt.show()
 
 x_array = [1,2,3,4,5,6,7,8,9]
 fig_ALLPATIENTS4B, ax1_ALLPATIENTS4B = plt.subplots(figsize = (8,4))
-plt.title('Normalised Average Tremor Severities for Each Hand\nAVERAGE AREA TRAPZ METHOD')
+plt.title('Normalised Average Tremor Severities for Each Hand\nAVERAGE AREA (METHOD 2A)')
 plt.grid(linestyle = '-', linewidth=0.5, axis='y')
 plt.xticks(x_array, ['Before', '1W', '1M', '3M', '6M', '1Y', '2Y', '3Y', '4Y'])
 

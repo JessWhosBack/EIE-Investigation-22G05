@@ -386,4 +386,5 @@ for image_counter, image in enumerate(image_array):
 # display(df)
 
 # df.to_csv('Area/Results.csv', index=False)
+
 # END OF CODE - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - #
